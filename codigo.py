@@ -24,7 +24,7 @@ if page == "Gráficos":
     # Load CSV file
     uploaded_file = st.file_uploader("Upload CSV file", type="csv")
     if uploaded_file is not None:
-        data = pd.read_csv(uploaded_file)
+        data = px.read_csv(uploaded_file)
 
         # Generate bar chart
         chart = px.bar(data, x="column_name", y="value_column", title="My Bar Chart")
