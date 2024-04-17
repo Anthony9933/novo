@@ -11,11 +11,11 @@ page_config = {
 st.set_page_config(**page_config)
 
 # Page selection
-page = st.sidebar.selectbox("Select a page", ["Apresentation", "Gráficos"])
+page = st.sidebar.selectbox("Select a page", ["Apresentação", "Gráficos"])
 
-# Apresentation page
-if page == "Apresentation":
-    st.title("Apresentation")
+# Apresentação page
+if page == "Apresentação":
+    st.title("Apresentação")
     st.write("Welcome to the Streamlit app! This page contains information about the app and its features.")
 
 # Gráficos page
@@ -23,12 +23,10 @@ if page == "Gráficos":
     st.title("Gráficos")
 
     # Load CSV file
-    uploaded_file = st.file_uploader("Upload CSV file", type="csv")
-    if uploaded_file is not None:
-        data = pd.read_csv(uploaded_file)
+    df = pd.read_csv("datatran2023.csv")
 
-        # Generate bar chart
-        chart = px.bar(data, x="column_name", y="value_column", title="My Bar Chart")
+    # Generate bar chart
+    chart = px.bar(df, x="id", y="dia_semana", title="My Bar Chart")
 
-        # Display chart
-        st.plotly_chart(chart)
+    # Display chart
+    st.plotly_chart(chart)
