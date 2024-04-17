@@ -49,7 +49,7 @@ def show_filters_data():
     st.header("Filtros e Dados")
     df = pd.read_csv('datatran2023.csv', encoding='latin-1', delimiter=';')
     st.dataframe(df)
-    #df['dia_semana'] = pd.to_datetime(df['dia_semana']).dt.name
+    df['dia_semana'] = pd.to_datetime(df['dia_semana']).dt.name
 
     dia_semana = st.sidebar.selectbox('Selecione o Dia', options=df['dia_semana'].unique())
     early_access = st.sidebar.checkbox('Apenas Early Access')
