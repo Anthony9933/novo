@@ -21,8 +21,8 @@ elif page == 'Gráficos':
     st.title('Gráficos')
     st.write('Gráficos gerados a partir da leitura de um arquivo CSV.')
     
-    file_path = '/path/to/datatran2023.csv' # Replace this with the actual path to the file
-    df = pd.read_csv(file_path)
+    
+    df = pd.read_csv('datatran2023.csv')
 
     # Geração de gráficos
     fig, ax = plt.subplots()
