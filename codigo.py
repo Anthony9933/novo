@@ -22,8 +22,6 @@ elif page == 'Gráficos':
     st.write('Gráficos gerados a partir da leitura de um arquivo CSV.')
 
     df = pd.read_csv('datatran2023.csv')
-    st.write(df.head())  # Verificar os primeiros dados do DataFrame
-
     # Geração de gráficos
     fig, ax = plt.subplots()
     ax.plot(df['dia_semana'], df['mortos'])
