@@ -22,6 +22,11 @@ elif page == 'Gráficos':
     st.write('Gráficos gerados a partir da leitura de um arquivo CSV.')
     
     
+    # Página de Gráficos
+elif page == 'Gráficos':
+    st.title('Gráficos')
+    st.write('Gráficos gerados a partir da leitura de um arquivo CSV.')
+
     df = pd.read_csv('datatran2023.csv')
 
     # Geração de gráficos
