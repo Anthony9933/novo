@@ -47,7 +47,7 @@ def show_overview():
 
 def show_filters_data():
     st.header("Filtros e Dados")
-    df = pd.read_csv('datatran2023.csv')
+    df = pd.read_csv('datatran2023.csv', encoding='latin-1', delimiter=';')
     st.dataframe(df)
     df['dia_semana'] = pd.to_datetime(df['dia_semana']).dt.name
 
@@ -74,7 +74,7 @@ def show_filters_data():
     fig, ax = plt.subplots(figsize=(10,4))
     ax.bar(id_uf.index, id_uf.values)
     plt.xticks(rotation=90)
-    plt.title('Média de acidentes por uf')
+    plt.title('Média de acidentes por Estado')
     plt.xlabel('Uf')
     plt.ylabel('Média de acidentes')
     st.pyplot(fig)
@@ -84,9 +84,9 @@ def show_filters_data():
     fig, ax = plt.subplots(figsize=(10,4))
     ax.bar(id_counts.index, id_counts.values)
     plt.xticks(rotation=90)
-    plt.title('Quantidade de acidentes por UF')
-    plt.xlabel('UF')
-    plt.ylabel('Quantidade de acidentes')
+    plt.title('Quantidade de acidentes por Estado')
+    plt.xlabel('uf')
+    plt.ylabel('id_counts')
     st.pyplot(fig)
 
 
