@@ -60,9 +60,9 @@ with sidebar_layout:
         st.experimental_rerun()
 
 # Generate the graphs using a CSV file from a GitHub repository
-df = pd.read_csv(url)
+df = pd.read_csv('datatran2023.csv')
 df.plot(kind='bar')
 plt.title('Bar Chart')
-plt.xlabel('X-axis label')
-plt.ylabel('Y-axis label')
+plt.xlabel('dia_semana')
+plt.ylabel('id')
 plt.show()
