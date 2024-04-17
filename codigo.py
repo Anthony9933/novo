@@ -10,26 +10,26 @@ def show_overview():
     
     # Visão Geral do Projeto
     st.header("Visão Geral do Projeto")
-    st.write("Bem-vindo ao projeto de Avaliações de Jogos no Steam! Este projeto gira em torno da análise e apresentação "
-             "de avaliações de jogos na plataforma Steam. O conjunto de dados contém várias colunas fornecendo insights "
-             "sobre as avaliações dos usuários, incluindo data de postagem, reações engraçadas, reações úteis, horas jogadas, "
-             "status de acesso antecipado, recomendações e a própria análise escrita.")
+    st.write("Bem-vindo ao projeto de Visualização de dados da loja Moda Antiga! Este projeto gira em torno da análise e apresentação "
+             "de dados do estoque e de vendas de produtos da loja Moda Antiga. O conjunto de dados contém várias colunas fornecendo insights "
+             "sobre os produtos e informações relativas a vendas, incluindo data, produtos mais vendidos, melhores e piores meses de venda.")
+    
     
     # Como Funciona
     st.header("Como Funciona")
-    st.write("O projeto utiliza um conjunto de dados com informações sobre avaliações de jogos. Aqui está uma breve visão "
+    st.write("O projeto utiliza um conjunto de dados com informações sobre as vendas e o estoque da loja. Aqui está uma breve visão "
              "geral dos principais componentes:")
     
     st.markdown("- **Conjunto de Dados**: O conjunto de dados consiste em avaliações, cada uma contendo informações como data "
-                "de postagem, reações do jogador, horas jogadas e mais.")
-    st.markdown("- **Explicação das Colunas**: As colunas do conjunto de dados fornecem detalhes sobre quando a avaliação foi "
-                "postada, reações do jogador, horas de jogo, status de acesso antecipado, recomendações do jogador e a própria análise escrita.")
+                "vendas, produtos, lucro e mais.")
+    st.markdown("- **Explicação das Colunas**: As colunas do conjunto de dados fornecem detalhes sobre vendas, produtos, "
+                "estoque e insights.")
     
     # Objetivo do Projeto
     st.header("Objetivo do Projeto")
-    st.write("O principal objetivo deste projeto é obter insights das avaliações de jogos no Steam. Isso inclui entender "
-             "os sentimentos dos jogadores, identificar jogos populares e explorar padrões nas recomendações dos jogadores "
-             "durante períodos de acesso antecipado.")
+    st.write("O principal objetivo deste projeto é obter insights pela análise dos dados e gráficos criados. Isso inclui entender "
+             "o que os dados estão nos dizendo, identificar e explorar padrões dos compradores "
+             "prevendo e criando estratégias para aumentar as vendas.")
     
     # Como Utilizar
     st.header("Como Utilizar")
