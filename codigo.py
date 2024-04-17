@@ -1,7 +1,8 @@
 import streamlit as st
-import pandas as pd
+import pandas as pd 
+import numpy as np
 import matplotlib.pyplot as plt
-
+import seaborn as sns
 # Sidebar (Menu Lateral)
 page = st.sidebar.selectbox("Escolha a Página", ["Visão Geral", "Filtros e Dados"])
 
@@ -47,7 +48,7 @@ def show_overview():
 def show_filters_data():
     st.header("Filtros e Dados")
     df = pd.read_csv('datatran2023.csv')
-
+    st.dataframe(df)
     df['dia_semana'] = pd.to_datetime(df['dia_semana']).dt.name
 
     dia_semana = st.sidebar.selectbox('Selecione o Dia', options=df['dia_semana'].unique())
