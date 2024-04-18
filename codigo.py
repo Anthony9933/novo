@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+import plotly as pt
 # Sidebar (Menu Lateral)
 page = st.sidebar.selectbox("Escolha a Página", ["Visão Geral", "Filtros e Dados"])
 
