@@ -44,7 +44,7 @@ def show_overview():
              "dos dados apresentados. Para análises específicas ou dúvidas, novos recursos podem ser incorporados com base nos "
              "objetivos do seu projeto.")
 
-    st.write("Aproveite a exploração do projeto de Avaliações de Jogos no Steam!")
+    st.write("Aproveite a exploração do projeto!")
 
 def show_filters_data():
     st.header("Filtros e Dados")
