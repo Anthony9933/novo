@@ -77,7 +77,7 @@ def show_filters_data():
 
     # Criando o gráfico
     fig = px.histogram(df_final, x='Município', y=['Quantidade de Acidentes', 'Quantidade de Mortos'],
-                 title='Quantidade de Acidentes e Mortos por Município')
+                       barmode='group', title='Quantidade de Acidentes e Mortos por Município')
     fig.show()
 
     st.write(df_final)
