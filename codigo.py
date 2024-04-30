@@ -10,8 +10,8 @@ def show_overview():
     
     # Visão Geral do Projeto
     st.header("Visão Geral do Projeto")
-    st.write("Bem-vindo ao projeto de Visualização de dados da loja Moda Antiga! Este projeto gira em torno da análise e apresentação "
-             "de dados do estoque e de vendas de produtos da loja Moda Antiga. O conjunto de dados contém várias colunas fornecendo insights "
+    st.write("Bem-vindo ao projeto de Visualização de dados da base de dados da PRF.  Este projeto gira em torno da análise e apresentação "
+             "de dados do acidentes, localização, motivos e categorias. O conjunto de dados contém várias colunas fornecendo insights "
              "sobre os produtos e informações relativas a vendas, incluindo data, produtos mais vendidos, melhores e piores meses de venda.")
     
     
@@ -21,7 +21,7 @@ def show_overview():
              "geral dos principais componentes:")
     
     st.markdown("- **Conjunto de Dados**: O conjunto de dados consiste em avaliações, cada uma contendo informações como data "
-                "vendas, produtos, lucro e mais.")
+                "local, motivo, tipo e mais.")
     st.markdown("- **Explicação das Colunas**: As colunas do conjunto de dados fornecem detalhes sobre vendas, produtos, "
                 "estoque e insights.")
     
