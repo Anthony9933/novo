@@ -64,7 +64,7 @@ def show_filters_data():
     # Criando o gráfico
     fig = px.bar(contagem_acidentes_por_municipio, x='Município', y='Quantidade de Acidentes',
                  title='Quantidade de Acidentes por Município')
-    fig.show()
+    st.plotly_chart(fig)
 
     st.write(contagem_acidentes_por_municipio)
 
