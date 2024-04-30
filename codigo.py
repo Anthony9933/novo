@@ -48,7 +48,6 @@ def show_overview():
 def show_filters_data():
     st.header("Filtros e Dados")
     df = pd.read_csv('datatran2023.csv', encoding='latin-1', delimiter=';')
-    st.header('Gráficos')
     st.dataframe(df)
 
     Dia = st.sidebar.selectbox('Selecione o Dia', options=df['dia_semana'].unique())
@@ -61,6 +60,7 @@ def show_filters_data():
     fig = px.pie(contagem_id_por_uf, x='uf', y='id', labels={'id':'Quantidade de IDs', 'uf':'UF'},
                  title='Quantidade de IDs por UF')
     fig.show()
+    st.write(uf)
 
 # Página de Visão Geral
 if page == "Visão Geral":
