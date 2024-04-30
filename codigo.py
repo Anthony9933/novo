@@ -49,6 +49,25 @@ def show_filters_data():
     st.header("Filtros e Dados")
     df = pd.read_csv('datatran2023.csv', encoding='latin-1', delimiter=';')
     st.header('Gráficos')
+    UF = st.sidebar.selectbox('Selecione o UF', options=df['uf'].unique())
+
+    # Filtrando o dataframe para apenas linhas do UF escolhido
+    df_uf = df[df['uf'] == UF]
+
+    # Atualizando o widget de seleção do município com base no UF selecionado
+    Municipio = st.sidebar.selectbox('Selecione o Município', options=df_uf['municipio'].unique())
+
+    # Filtrando o dataframe para apenas linhas do município escolhido
+    df_municipio = df_uf[df_uf['municipio'] == Municipio]
+
+    contagem_id_por_municipio = df_municipio['id'].nunique()
+
+    # Criando o gráfico
+    fig = px.bar(contagem_id_por_municipio, x='municipio', y='id', labels={'id':'Quantidade de IDs', 'municipio':'Município'},
+                 title='Quantidade de IDs por Município')
+    fig.show()
+
+    st.write(contagem_id_por_municipio)
     st.dataframe(df)
 
     Dia = st.sidebar.selectbox('Selecione o Dia', options=df['dia_semana'].unique())
