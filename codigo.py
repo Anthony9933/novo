@@ -57,7 +57,7 @@ def show_filters_data():
 
 
     Estado = st.sidebar.selectbox('Selecione um Estado', options=df['uf'].unique())
-    uf_df = filtered_df[filtered_df['uf'] == uf]
+    filtered_df = df[df[filtered_df['uf'] == uf]
 
     st.write(uf_df)
 
