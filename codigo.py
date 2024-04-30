@@ -48,6 +48,7 @@ def show_overview():
 def show_filters_data():
     st.header("Filtros e Dados")
     df = pd.read_csv('datatran2023.csv', encoding='latin-1', delimiter=';')
+    st.header('Gráficos')
     st.dataframe(df)
 
     Dia = st.sidebar.selectbox('Selecione o Dia', options=df['dia_semana'].unique())
