@@ -68,22 +68,22 @@ def show_filters_data():
     fig.show()
 
     st.write(contagem_id_por_municipio)
-    st.dataframe(df)
-
-    Dia = st.sidebar.selectbox('Selecione o Dia', options=df['dia_semana'].unique())
-
-    filtered_df = df[df['dia_semana'] == Dia]
-
-    contagem_id_por_uf = filtered_df.groupby('uf')['id'].nunique().reset_index()
-
-    # Criando o gráfico
-    fig = px.bar(contagem_id_por_uf, x='uf', y='id', labels={'id':'Quantidade de IDs', 'uf':'UF'},
-                 title='Quantidade de IDs por UF')
-    fig.show()
-
-    st.write(contagem_id_por_uf)
-
-    #st.header('Gráficos')
+        #st.dataframe(df)
+    
+        #Dia = st.sidebar.selectbox('Selecione o Dia', options=df['dia_semana'].unique())
+    
+        #filtered_df = df[df['dia_semana'] == Dia]
+    
+        #contagem_id_por_uf = filtered_df.groupby('uf')['id'].nunique().reset_index()
+    
+        # Criando o gráfico
+        #fig = px.bar(contagem_id_por_uf, x='uf', y='id', labels={'id':'Quantidade de IDs', 'uf':'UF'},
+                     #title='Quantidade de IDs por UF')
+        #fig.show()
+    
+        #st.write(contagem_id_por_uf)
+    
+        #st.header('Gráficos')
 
 # Página de Visão Geral
 if page == "Visão Geral":
