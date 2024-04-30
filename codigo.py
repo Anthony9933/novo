@@ -76,9 +76,9 @@ def show_filters_data():
     # Criando o gráfico
     fig = px.scatter(soma_mortos_por_municipio, x='Município', y='Quantidade de Mortos',
                  title='Quantidade de Mortos por Município')
-    fig.show()
 
-    st.write(soma_mortos_por_municipio)
+    st.plotly_chart(fig)
+    #st.write(soma_mortos_por_municipio)
         #st.dataframe(df)
     
         #Dia = st.sidebar.selectbox('Selecione o Dia', options=df['dia_semana'].unique())
