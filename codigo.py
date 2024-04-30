@@ -56,7 +56,7 @@ def show_filters_data():
     filtered_df = df[df['dia_semama'] == dia_semana]
 
 
-    uf = st.sidebar.selectbox('Selecione um Estado', options=df['title'].unique())
+    Estado = st.sidebar.selectbox('Selecione um Estado', options=df['title'].unique())
     uf_df = filtered_df[filtered_df['title'] == uf]
 
     st.write(uf_df)
