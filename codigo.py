@@ -76,7 +76,7 @@ def show_filters_data():
     df_final.columns = ['Município', 'Quantidade de Acidentes', 'Quantidade de Mortos']
 
     # Criando o gráfico
-    fig = px.bar(df_final, x='Município', y=['Quantidade de Acidentes', 'Quantidade de Mortos'],
+    fig = px.histogram(df_final, x='Município', y=['Quantidade de Acidentes', 'Quantidade de Mortos'],
                  title='Quantidade de Acidentes e Mortos por Município')
     fig.show()
 
