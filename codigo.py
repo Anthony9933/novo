@@ -57,7 +57,7 @@ def show_filters_data():
     contagem_id_por_uf = filtered_df.groupby('uf')['id'].nunique().reset_index()
 
     # Criando o gráfico
-    fig = px.pie(contagem_id_por_uf, x='uf', y='id', labels={'id':'Quantidade de IDs', 'uf':'UF'},
+    fig = px.bar(contagem_id_por_uf, x='uf', y='id', labels={'id':'Quantidade de IDs', 'uf':'UF'},
                  title='Quantidade de IDs por UF')
     fig.show()
 
