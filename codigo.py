@@ -64,7 +64,7 @@ def show_filters_data():
     contagem_acidentes_por_municipio = df_municipio['id'].value_counts().reset_index()
 
     # Renomeando as colunas para melhor entendimento
-    contagem_acidentes_por_municipio.columns = ['Id do acidente', 'Quantidade de Acidentes']
+    contagem_acidentes_por_municipio.columns = ['Municipio', 'Quantidade de Acidentes']
 
     # Criando o gráfico
     fig = px.bar(contagem_acidentes_por_municipio, x='Municipio', y='Quantidade de Acidentes',
