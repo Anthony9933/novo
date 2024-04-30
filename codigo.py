@@ -63,7 +63,7 @@ def show_filters_data():
 
     st.write(contagem_id_por_uf)
 
-    st.header('Gráficos')
+    #st.header('Gráficos')
 
 # Página de Visão Geral
 if page == "Visão Geral":
