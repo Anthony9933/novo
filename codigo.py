@@ -60,14 +60,18 @@ def show_filters_data():
     # Filtrando o dataframe para apenas linhas do município escolhido
     df_municipio = df_uf[df_uf['municipio'] == Municipio]
 
-    contagem_id_por_municipio = df_municipio['id'].nunique()
+    # Contando o número de acidentes por município
+    contagem_acidentes_por_municipio = df_municipio['id'].value_counts().reset_index()
+
+    # Renomeando as colunas para melhor entendimento
+    contagem_acidentes_por_municipio.columns = ['Município', 'Quantidade de Acidentes']
 
     # Criando o gráfico
-    fig = px.bar(contagem_id_por_municipio, x='municipio', y='id', labels={'id':'Quantidade de IDs', 'municipio':'Município'},
-                 title='Quantidade de IDs por Município')
+    fig = px.bar(contagem_acidentes_por_municipio, x='Município', y='Quantidade de Acidentes',
+                 title='Quantidade de Acidentes por Município')
     fig.show()
 
-    st.write(contagem_id_por_municipio)
+    st.write(contagem_acidentes_por_municipio)
         #st.dataframe(df)
     
         #Dia = st.sidebar.selectbox('Selecione o Dia', options=df['dia_semana'].unique())
