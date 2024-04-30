@@ -67,6 +67,18 @@ def show_filters_data():
     fig.show()
 
     st.write(contagem_acidentes_por_municipio)
+
+    soma_mortos_por_municipio = df_uf.groupby('municipio')['mortos'].sum().reset_index()
+
+    # Renomeando as colunas para melhor entendimento
+    soma_mortos_por_municipio.columns = ['Município', 'Quantidade de Mortos']
+
+    # Criando o gráfico
+    fig = px.bar(soma_mortos_por_municipio, x='Município', y='Quantidade de Mortos',
+                 title='Quantidade de Mortos por Município')
+    fig.show()
+
+    st.write(soma_mortos_por_municipio)
         #st.dataframe(df)
     
         #Dia = st.sidebar.selectbox('Selecione o Dia', options=df['dia_semana'].unique())
