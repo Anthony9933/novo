@@ -74,7 +74,7 @@ def show_filters_data():
     soma_mortos_por_municipio.columns = ['Município', 'Quantidade de Mortos']
 
     # Criando o gráfico
-    fig = px.histogram(soma_mortos_por_municipio, x='Município', y='Quantidade de Acidentes','Quantidade de Mortos',
+    fig = px.histogram(soma_mortos_por_municipio, x='Município', y='Quantidade de Acidentes''Quantidade de Mortos',
                  title='Quantidade de Mortos por Município')
     #fig = px.bar(soma_mortos_por_municipio, x='Município', y='Quantidade de Mortos',
                  #title='Quantidade de Mortos por Município')
