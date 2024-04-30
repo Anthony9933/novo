@@ -56,9 +56,13 @@ def show_filters_data():
     filtered_df = df[df['dia_semama'] == dia_semana]
 
 
-    Estado = st.sidebar.selectbox('Selecione um Estado', options=df['uf'].unique())
-    filtered2_df = df[df['uf'] == uf]
+    contagem_id_por_uf = df.groupby('uf')['id'].nunique().reset_index()
 
+    # Criando o gráfico
+    fig = px.bar(contagem_id_por_uf, x='uf', y='id', labels={'id':'Quantidade de IDs', 'uf':'UF'},
+                 title='Quantidade de IDs por UF')
+    fig.show()
+    
     st.write(uf_df)
 
 
