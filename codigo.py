@@ -49,8 +49,8 @@ def show_filters_data():
     st.header("Filtros e Dados")
     df = pd.read_csv('datatran2023.csv', encoding='latin-1', delimiter=';')
     st.header('Gráficos')
-    UF = st.sidebar.selectbox('Selecione o Estado', options=df['uf'].unique())
-    st.dataframe(df)
+    UF = st.sidebar.selectbox('Selecione o UF', options=df['uf'].unique())
+
     # Filtrando o dataframe para apenas linhas do UF escolhido
     df_uf = df[df['uf'] == UF]
 
@@ -60,20 +60,12 @@ def show_filters_data():
     # Renomeando as colunas para melhor entendimento
     contagem_acidentes_por_municipio.columns = ['Município', 'Quantidade de Acidentes']
 
-    soma_mortos_por_municipio = df_uf.groupby('municipio')['mortos'].sum().reset_index()
-
-    # Juntando os dois dataframes
-    df_final = pd.merge(contagem_acidentes_por_municipio, soma_mortos_por_municipio, on='municipio')
-
-    # Renomeando as colunas para melhor entendimento
-    df_final.columns = ['Município', 'Quantidade de Acidentes', 'Quantidade de Mortos']
-
     # Criando o gráfico
-    fig = px.histogram(df_final, x='Município', y=['Quantidade de Acidentes', 'Quantidade de Mortos'],
-                       barmode='group', title='Quantidade de Acidentes e Mortos por Município')
+    fig = px.bar(contagem_acidentes_por_municipio, x='Município', y='Quantidade de Acidentes',
+                 title='Quantidade de Acidentes por Município')
     fig.show()
 
-    st.write(df_final)
+    st.write(contagem_acidentes_por_municipio)
         #st.dataframe(df)
     
         #Dia = st.sidebar.selectbox('Selecione o Dia', options=df['dia_semana'].unique())
