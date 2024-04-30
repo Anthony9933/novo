@@ -61,7 +61,7 @@ def show_filters_data():
     # Criando o gráfico
     fig = px.bar(contagem_id_por_uf, x='uf', y='id', labels={'id':'Quantidade de IDs', 'uf':'UF'},
                  title='Quantidade de IDs por UF')
-    st.show()
+    pt.show()
     
     st.write(uf_df)
 
