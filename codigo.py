@@ -56,10 +56,7 @@ def show_filters_data():
     recommendation = st.sidebar.checkbox('Apenas Recomendados')
 
     filtered_df = df[df['dia_semama'] == dia_semana]
-    if early_access:
-        filtered_df = filtered_df[filtered_df['is_early_access_review'] == True]
-    if recommendation:
-        filtered_df = filtered_df[filtered_df['recommendation'] == "Recommended"]
+
 
     uf = st.sidebar.selectbox('Selecione um Estado', options=df['title'].unique())
     uf_df = filtered_df[filtered_df['title'] == uf]
