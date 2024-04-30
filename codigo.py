@@ -54,20 +54,14 @@ def show_filters_data():
     # Filtrando o dataframe para apenas linhas do UF escolhido
     df_uf = df[df['uf'] == UF]
 
-    # Atualizando o widget de seleção do município com base no UF selecionado
-    Municipio = st.sidebar.selectbox('Selecione o Município', options=df_uf['municipio'].unique())
-
-    # Filtrando o dataframe para apenas linhas do município escolhido
-    df_municipio = df_uf[df_uf['municipio'] == Municipio]
-
     # Contando o número de acidentes por município
-    contagem_acidentes_por_municipio = df_municipio['id'].value_counts().reset_index()
+    contagem_acidentes_por_municipio = df_uf['municipio'].value_counts().reset_index()
 
     # Renomeando as colunas para melhor entendimento
-    contagem_acidentes_por_municipio.columns = ['Municipio', 'Quantidade de Acidentes']
+    contagem_acidentes_por_municipio.columns = ['Município', 'Quantidade de Acidentes']
 
     # Criando o gráfico
-    fig = px.bar(contagem_acidentes_por_municipio, x='Municipio', y='Quantidade de Acidentes',
+    fig = px.bar(contagem_acidentes_por_municipio, x='Município', y='Quantidade de Acidentes',
                  title='Quantidade de Acidentes por Município')
     fig.show()
 
