@@ -66,7 +66,6 @@ def show_filters_data():
                  title='Quantidade de Acidentes por Município')
     st.plotly_chart(fig)
 
-    st.write(contagem_acidentes_por_municipio)
 
     soma_mortos_por_municipio = df_uf.groupby('municipio')['mortos'].sum().reset_index()
 
