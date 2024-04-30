@@ -50,7 +50,7 @@ def show_filters_data():
     df = pd.read_csv('datatran2023.csv', encoding='latin-1', delimiter=';')
     st.header('Gráficos')
     UF = st.sidebar.selectbox('Selecione o Estado', options=df['uf'].unique())
-
+    st.dataframe(df)
     # Filtrando o dataframe para apenas linhas do UF escolhido
     df_uf = df[df['uf'] == UF]
 
