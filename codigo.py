@@ -49,25 +49,21 @@ def show_filters_data():
     st.header("Filtros e Dados")
     df = pd.read_csv('datatran2023.csv', encoding='latin-1', delimiter=';')
     st.dataframe(df)
-    #df['dia_semana'] = pd.to_datetime(df['dia_semana']).dt.name
 
     Dia = st.sidebar.selectbox('Selecione o Dia', options=df['dia_semana'].unique())
 
-    filtered_df = df[df['dia_semama'] == dia_semana]
+    filtered_df = df[df['dia_semana'] == Dia]
 
-
-    contagem_id_por_uf = df.groupby('uf')['id'].nunique().reset_index()
+    contagem_id_por_uf = filtered_df.groupby('uf')['id'].nunique().reset_index()
 
     # Criando o gráfico
     fig = px.bar(contagem_id_por_uf, x='uf', y='id', labels={'id':'Quantidade de IDs', 'uf':'UF'},
                  title='Quantidade de IDs por UF')
-    px.show()
-    
-    st.write(uf_df)
+    fig.show()
 
+    st.write(contagem_id_por_uf)
 
     st.header('Gráficos')
-
 
 # Página de Visão Geral
 if page == "Visão Geral":
