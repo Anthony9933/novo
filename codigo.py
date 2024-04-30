@@ -60,13 +60,6 @@ def show_filters_data():
     # Renomeando as colunas para melhor entendimento
     contagem_acidentes_por_municipio.columns = ['Município', 'Quantidade de Acidentes']
 
-    # Criando o gráfico
-    fig = px.bar(contagem_acidentes_por_municipio, x='Município', y='Quantidade de Acidentes',
-                 title='Quantidade de Acidentes por Município')
-    fig.show()
-
-    st.write(contagem_acidentes_por_municipio)
-
     soma_mortos_por_municipio = df_uf.groupby('municipio')['mortos'].sum().reset_index()
 
     # Juntando os dois dataframes
