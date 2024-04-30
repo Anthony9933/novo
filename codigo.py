@@ -52,8 +52,6 @@ def show_filters_data():
     #df['dia_semana'] = pd.to_datetime(df['dia_semana']).dt.name
 
     Dia = st.sidebar.selectbox('Selecione o Dia', options=df['dia_semana'].unique())
-    early_access = st.sidebar.checkbox('Apenas Early Access')
-    recommendation = st.sidebar.checkbox('Apenas Recomendados')
 
     filtered_df = df[df['dia_semama'] == dia_semana]
 
