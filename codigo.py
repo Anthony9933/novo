@@ -66,6 +66,21 @@ def show_filters_data():
     fig.show()
 
     st.write(contagem_acidentes_por_municipio)
+
+    soma_mortos_por_municipio = df_uf.groupby('municipio')['mortos'].sum().reset_index()
+
+    # Juntando os dois dataframes
+    df_final = pd.merge(contagem_acidentes_por_municipio, soma_mortos_por_municipio, on='municipio')
+
+    # Renomeando as colunas para melhor entendimento
+    df_final.columns = ['Município', 'Quantidade de Acidentes', 'Quantidade de Mortos']
+
+    # Criando o gráfico
+    fig = px.bar(df_final, x='Município', y=['Quantidade de Acidentes', 'Quantidade de Mortos'],
+                 title='Quantidade de Acidentes e Mortos por Município')
+    fig.show()
+
+    st.write(df_final)
         #st.dataframe(df)
     
         #Dia = st.sidebar.selectbox('Selecione o Dia', options=df['dia_semana'].unique())
