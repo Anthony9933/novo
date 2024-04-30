@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd 
 import numpy as np
 import matplotlib.pyplot as plt
-import plotly as pt
+import plotly.express as px
 # Sidebar (Menu Lateral)
 page = st.sidebar.selectbox("Escolha a Página", ["Visão Geral", "Filtros e Dados"])
 
@@ -59,9 +59,9 @@ def show_filters_data():
     contagem_id_por_uf = df.groupby('uf')['id'].nunique().reset_index()
 
     # Criando o gráfico
-    fig = pt.bar(contagem_id_por_uf, x='uf', y='id', labels={'id':'Quantidade de IDs', 'uf':'UF'},
+    fig = px.bar(contagem_id_por_uf, x='uf', y='id', labels={'id':'Quantidade de IDs', 'uf':'UF'},
                  title='Quantidade de IDs por UF')
-    pt.show()
+    px.show()
     
     st.write(uf_df)
 
