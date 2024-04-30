@@ -48,7 +48,7 @@ def show_overview():
 def show_filters_data():
     st.header("Filtros e Dados")
     df = pd.read_csv('datatran2023.csv', encoding='latin-1', delimiter=';')
-    #st.dataframe(df)
+    st.dataframe(df)
     #df['dia_semana'] = pd.to_datetime(df['dia_semana']).dt.name
 
     Dia = st.sidebar.selectbox('Selecione o Dia', options=df['dia_semana'].unique())
@@ -63,26 +63,6 @@ def show_filters_data():
 
 
     st.header('Gráficos')
-
-    # Média de acidentes por Uf
-    id_uf = df.groupby('title')['id'].mean()
-    fig, ax = plt.subplots(figsize=(10,4))
-    ax.bar(id_uf.index, id_uf.values)
-    plt.xticks(rotation=90)
-    plt.title('Média de acidentes por Estado')
-    plt.xlabel('Uf')
-    plt.ylabel('Média de acidentes')
-    st.pyplot(fig)
-
-    # Quantidade de acidentes
-    id_counts = df.groupby('title')['id'].sum()
-    fig, ax = plt.subplots(figsize=(10,4))
-    ax.bar(id_counts.index, id_counts.values)
-    plt.xticks(rotation=90)
-    plt.title('Quantidade de acidentes por Estado')
-    plt.xlabel('uf')
-    plt.ylabel('id_counts')
-    st.pyplot(fig)
 
 
 # Página de Visão Geral
