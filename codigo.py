@@ -73,7 +73,7 @@ def show_filters_data():
     soma_mortos_por_municipio.columns = ['Município', 'Quantidade de Mortos']
 
     # Criando o gráfico
-    fig2 = px.scatter(soma_mortos_por_municipio, x='Município', y='Quantidade de Mortos',
+    fig2 = px.line(soma_mortos_por_municipio, x='Município', y='Quantidade de Mortos',
                  title='Quantidade de Mortos por Município')
 
     st.plotly_chart(fig2)
