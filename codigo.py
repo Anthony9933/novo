@@ -4,8 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import plotly.express as px
 # Sidebar (Menu Lateral)
-page = st.sidebar.selectbox("Escolha a Página", ["Visão Geral", "Filtros e Dados Gerais", "Número de Acidentes ao Longo do Tempo"])
-
+page = st.sidebar.selectbox("Escolha a Página", ["Visão Geral", "Filtros e Dados", "Gráficos de Acidentes e Casualidades ao Longo do Tempo"])
 
 def show_overview():
     
@@ -79,8 +78,8 @@ def show_filters_data():
 
     st.plotly_chart(fig2)
 
-def show_accidents_over_time():
-    st.header("Número de Acidentes ao Longo do Tempo")
+def show_graphs():
+    st.header("Gráficos de Acidentes e Casualidades ao Longo do Tempo")
     df = pd.read_csv('datatran2023.csv', encoding='latin-1', delimiter=';')
 
     # Convertendo a coluna 'data_inversa' para o tipo datetime
@@ -89,28 +88,22 @@ def show_accidents_over_time():
     # Agrupando os dados pela data e contando o número de acidentes
     accidents_count = df.groupby('data_inversa').size().reset_index(name='Número de Acidentes')
 
-    # Criando o gráfico de linha
-    fig = px.line(accidents_count, x='data_inversa', y='Número de Acidentes',
+    # Criando o gráfico de linha para o número de acidentes ao longo do tempo
+    fig3 = px.line(accidents_count, x='data_inversa', y='Número de Acidentes',
                   title='Número de Acidentes ao Longo do Tempo')
-    st.plotly_chart(fig)
-    
-    st.header("Número de Mortos, Feridos Leves, Feridos Graves e Ilesos ao Longo do Tempo")
-    df = pd.read_csv('datatran2023.csv', encoding='latin-1', delimiter=';')
-
-    # Convertendo a coluna 'data_inversa' para o tipo datetime
-    df['data_inversa'] = pd.to_datetime(df['data_inversa'])
+    st.plotly_chart(fig3)
 
     # Agrupando os dados pela data e somando o número de mortos, feridos leves, feridos graves e ilesos
     casualties = df.groupby('data_inversa').agg({'mortos': 'sum', 'feridos_leves': 'sum', 'feridos_graves': 'sum', 'ilesos': 'sum'}).reset_index()
 
-    # Criando o gráfico de linha
-    fig = go.Figure()
-    fig.add_trace(go.Scatter(x=casualties['data_inversa'], y=casualties['mortos'], mode='lines', name='Mortos'))
-    fig.add_trace(go.Scatter(x=casualties['data_inversa'], y=casualties['feridos_leves'], mode='lines', name='Feridos Leves'))
-    fig.add_trace(go.Scatter(x=casualties['data_inversa'], y=casualties['feridos_graves'], mode='lines', name='Feridos Graves'))
-    fig.add_trace(go.Scatter(x=casualties['data_inversa'], y=casualties['ilesos'], mode='lines', name='Ilesos'))
-    fig.update_layout(title='Número de Mortos, Feridos Leves, Feridos Graves e Ilesos ao Longo do Tempo', xaxis_title='Data', yaxis_title='Número de Pessoas')
-    st.plotly_chart(fig)
+    # Criando o gráfico de linha para o número de mortos, feridos leves, feridos graves e ilesos ao longo do tempo
+    fig4 = go.Figure()
+    fig4.add_trace(go.Scatter(x=casualties['data_inversa'], y=casualties['mortos'], mode='lines', name='Mortos'))
+    fig4.add_trace(go.Scatter(x=casualties['data_inversa'], y=casualties['feridos_leves'], mode='lines', name='Feridos Leves'))
+    fig4.add_trace(go.Scatter(x=casualties['data_inversa'], y=casualties['feridos_graves'], mode='lines', name='Feridos Graves'))
+    fig4.add_trace(go.Scatter(x=casualties['data_inversa'], y=casualties['ilesos'], mode='lines', name='Ilesos'))
+    fig4.update_layout(title='Número de Mortos, Feridos Leves, Feridos Graves e Ilesos ao Longo do Tempo', xaxis_title='Data', yaxis_title='Número de Pessoas')
+    st.plotly_chart(fig4)
 
 
 # Página de Visão Geral
@@ -122,7 +115,8 @@ elif page == "Filtros e Dados":
     show_filters_data()
     
 # Página de Filtros de acidentes
-if page == "Número de Acidentes ao Longo do Tempo":
-    show_accidents_over_time()
+if page == "Gráficos de Acidentes e Casualidades ao Longo do Tempo":
+    show_graphs()
+
 
 
