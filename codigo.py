@@ -113,7 +113,7 @@ def show_accidents_by_hour():
     accidents_count = df.groupby('hora').size().reset_index(name='Número de Acidentes')
 
     # Criando o gráfico de linha
-    fig5 = px.pie(accidents_count, x='hora', y='Número de Acidentes',
+    fig5 = px.line(accidents_count, x='hora', y='Número de Acidentes',
                   title='Número de Acidentes por Hora do Dia')
     st.plotly_chart(fig5)
 
