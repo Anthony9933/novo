@@ -115,7 +115,7 @@ elif page == "Filtros e Dados":
     show_filters_data()
     
 # Página de Filtros de acidentes
-if page == "Gráficos de Acidentes e Casualidades ao Longo do Tempo":
+elif page == "Gráficos de Acidentes e Casualidades ao Longo do Tempo":
     show_graphs()
 
 
