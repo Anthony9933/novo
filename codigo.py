@@ -77,7 +77,7 @@ def show_filters_data():
 
     st.plotly_chart(fig2)
 
-def show_graphs():
+#def show_graphs():
     st.header("Gráficos de Acidentes e Casualidades ao Longo do Tempo")
     df = pd.read_csv('datatran2023.csv', encoding='latin-1', delimiter=';')
 
@@ -102,7 +102,7 @@ def show_graphs():
     fig4.add_scatter(x=casualties['data_inversa'], y=casualties['ilesos'], mode='lines', name='Ilesos')
     st.plotly_chart(fig4)
 
-def show_accidents_by_hour():
+#def show_accidents_by_hour():
     st.header("Número de Acidentes por Hora do Dia")
     df = pd.read_csv('datatran2023.csv', encoding='latin-1', delimiter=';')
 
@@ -128,9 +128,9 @@ elif page == "Filtros e Dados":
     show_filters_data()
     
 # Página de Filtros de acidentes
-elif page == "Gráficos de Acidentes e Casualidades ao Longo do Tempo":
-    show_graphs()
+#elif page == "Gráficos de Acidentes e Casualidades ao Longo do Tempo":
+    #show_graphs()
 
-elif page == "Número de Acidentes por Hora do Dia":
-    show_accidents_by_hour()
+#elif page == "Número de Acidentes por Hora do Dia":
+    #show_accidents_by_hour()
 
