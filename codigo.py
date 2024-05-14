@@ -4,7 +4,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import plotly.express as px
 # Sidebar (Menu Lateral)
-page = st.sidebar.selectbox("Escolha a Página", ["Visão Geral", "Filtros e Dados"])
+page = st.sidebar.selectbox("Escolha a Página", ["Visão Geral", "Filtros e Dados Gerais", "Número de Acidentes ao Longo do Tempo"])
+
 
 def show_overview():
     
@@ -77,23 +78,21 @@ def show_filters_data():
                  title='Quantidade de Mortos por Município')
 
     st.plotly_chart(fig2)
-    #st.write(soma_mortos_por_municipio)
-        #st.dataframe(df)
-    
-        #Dia = st.sidebar.selectbox('Selecione o Dia', options=df['dia_semana'].unique())
-    
-        #filtered_df = df[df['dia_semana'] == Dia]
-    
-        #contagem_id_por_uf = filtered_df.groupby('uf')['id'].nunique().reset_index()
-    
-        # Criando o gráfico
-        #fig = px.bar(contagem_id_por_uf, x='uf', y='id', labels={'id':'Quantidade de IDs', 'uf':'UF'},
-                     #title='Quantidade de IDs por UF')
-        #fig.show()
-    
-        #st.write(contagem_id_por_uf)
-    
-        #st.header('Gráficos')
+
+def show_accidents_over_time():
+    st.header("Número de Acidentes ao Longo do Tempo")
+    df = pd.read_csv('datatran2023.csv', encoding='latin-1', delimiter=';')
+
+    # Convertendo a coluna 'data_inversa' para o tipo datetime
+    df['data_inversa'] = pd.to_datetime(df['data_inversa'])
+
+    # Agrupando os dados pela data e contando o número de acidentes
+    accidents_count = df.groupby('data_inversa').size().reset_index(name='Número de Acidentes')
+
+    # Criando o gráfico de linha
+    fig = px.line(accidents_count, x='data_inversa', y='Número de Acidentes',
+                  title='Número de Acidentes ao Longo do Tempo')
+    st.plotly_chart(fig)
 
 # Página de Visão Geral
 if page == "Visão Geral":
@@ -102,3 +101,6 @@ if page == "Visão Geral":
 # Página de Filtros e Dados
 elif page == "Filtros e Dados":
     show_filters_data()
+# Página de Filtros de acidentes
+if page == "Número de Acidentes ao Longo do Tempo":
+    show_accidents_over_time()
