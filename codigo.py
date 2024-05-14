@@ -103,6 +103,21 @@ def show_graphs():
     fig4.add_scatter(x=casualties['data_inversa'], y=casualties['ilesos'], mode='lines', name='Ilesos')
     st.plotly_chart(fig4)
 
+#def show_accidents_by_hour():
+    st.header("Número de Acidentes por Hora do Dia")
+    df = pd.read_csv('datatran2023.csv', encoding='latin-1', delimiter=';')
+
+    # Convertendo a coluna 'horario' para o tipo datetime e extraindo a hora
+    df['hora'] = pd.to_datetime(df['horario']).dt.hour
+
+    # Agrupando os dados pela hora e contando o número de acidentes
+    accidents_count = df.groupby('hora').size().reset_index(name='Número de Acidentes')
+
+    # Criando o gráfico de linha
+    fig = px.pie(accidents_count, x='hora', y='Número de Acidentes',
+                  title='Número de Acidentes por Hora do Dia')
+    st.plotly_chart(fig)
+
 
 
 # Página de Visão Geral
