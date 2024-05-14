@@ -4,8 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import plotly.express as px
 # Sidebar (Menu Lateral)
-page = st.sidebar.selectbox("Escolha a Página", ["Visão Geral", "Filtros e Dados", "Gráficos de Acidentes e Casualidades ao Longo do Tempo"])
-
+page = st.sidebar.selectbox("Escolha a Página", ["Visão Geral", "Filtros e Dados", "Gráficos de Acidentes e Casualidades ao Longo do Tempo", "Número de Acidentes por Hora do Dia"])
 def show_overview():
     
     # Visão Geral do Projeto
@@ -103,7 +102,7 @@ def show_graphs():
     fig4.add_scatter(x=casualties['data_inversa'], y=casualties['ilesos'], mode='lines', name='Ilesos')
     st.plotly_chart(fig4)
 
-#def show_accidents_by_hour():
+def show_accidents_by_hour():
     st.header("Número de Acidentes por Hora do Dia")
     df = pd.read_csv('datatran2023.csv', encoding='latin-1', delimiter=';')
 
@@ -132,5 +131,6 @@ elif page == "Filtros e Dados":
 elif page == "Gráficos de Acidentes e Casualidades ao Longo do Tempo":
     show_graphs()
 
-
+elif page == "Número de Acidentes por Hora do Dia":
+    show_accidents_by_hour()
 
