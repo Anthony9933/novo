@@ -90,7 +90,7 @@ def show_graphs():
     # Criando o gráfico de linha para o número de acidentes ao longo do tempo
     fig3 = px.line(accidents_count, x='data_inversa', y='Número de Acidentes',
                   title='Número de Acidentes ao Longo do Tempo')
-    st.plotly_chart(fig3)
+    #st.plotly_chart(fig3)
 
     # Agrupando os dados pela data e somando o número de mortos, feridos leves, feridos graves e ilesos
     casualties = df.groupby('data_inversa').agg({'mortos': 'sum', 'feridos_leves': 'sum', 'feridos_graves': 'sum', 'ilesos': 'sum'}).reset_index()
