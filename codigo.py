@@ -97,13 +97,12 @@ def show_graphs():
     casualties = df.groupby('data_inversa').agg({'mortos': 'sum', 'feridos_leves': 'sum', 'feridos_graves': 'sum', 'ilesos': 'sum'}).reset_index()
 
     # Criando o gráfico de linha para o número de mortos, feridos leves, feridos graves e ilesos ao longo do tempo
-    fig4 = go.Figure()
-    fig4.add_trace(go.Scatter(x=casualties['data_inversa'], y=casualties['mortos'], mode='lines', name='Mortos'))
-    fig4.add_trace(go.Scatter(x=casualties['data_inversa'], y=casualties['feridos_leves'], mode='lines', name='Feridos Leves'))
-    fig4.add_trace(go.Scatter(x=casualties['data_inversa'], y=casualties['feridos_graves'], mode='lines', name='Feridos Graves'))
-    fig4.add_trace(go.Scatter(x=casualties['data_inversa'], y=casualties['ilesos'], mode='lines', name='Ilesos'))
-    fig4.update_layout(title='Número de Mortos, Feridos Leves, Feridos Graves e Ilesos ao Longo do Tempo', xaxis_title='Data', yaxis_title='Número de Pessoas')
+    fig4 = px.line(casualties, x='data_inversa', y='mortos', title='Número de Mortos ao Longo do Tempo')
+    fig4.add_scatter(x=casualties['data_inversa'], y=casualties['feridos_leves'], mode='lines', name='Feridos Leves')
+    fig4.add_scatter(x=casualties['data_inversa'], y=casualties['feridos_graves'], mode='lines', name='Feridos Graves')
+    fig4.add_scatter(x=casualties['data_inversa'], y=casualties['ilesos'], mode='lines', name='Ilesos')
     st.plotly_chart(fig4)
+
 
 
 # Página de Visão Geral
