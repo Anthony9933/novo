@@ -95,6 +95,8 @@ def show_filters_data():
     # Agrupando os dados pela data e somando o número de mortos, feridos leves, feridos graves e ilesos
     casualties = df.groupby('data_inversa').agg({'mortos': 'sum', 'feridos_leves': 'sum', 'feridos_graves': 'sum', 'ilesos': 'sum'}).reset_index()
 
+    df_uf = df[df['UF'] == UF_selecionado]
+
     # Criando o gráfico de linha para o número de mortos, feridos leves, feridos graves e ilesos ao longo do tempo
     fig4 = px.line(casualties, x='data_inversa', y='mortos', title='Número de Mortos ao Longo do Tempo')
     fig4.add_scatter(x=casualties['data_inversa'], y=casualties['feridos_leves'], mode='lines', name='Feridos Leves')
