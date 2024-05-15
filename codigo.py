@@ -77,10 +77,10 @@ def show_filters_data():
 
     st.plotly_chart(fig2)
 
-def show_graphs():
+#def show_graphs():
     st.header("Gráficos de Acidentes e Casualidades ao Longo do Tempo")
     df = pd.read_csv('datatran2023.csv', encoding='latin-1', delimiter=';')
-    UF = st.sidebar.selectbox('Selecione o UF', options=df['uf'].unique())
+    
 
     # Convertendo a coluna 'data_inversa' para o tipo datetime
     df['data_inversa'] = pd.to_datetime(df['data_inversa'])
