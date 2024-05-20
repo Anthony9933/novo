@@ -126,6 +126,31 @@ def show_filters_data():
                   title='Número de Acidentes por Hora do Dia')
     st.plotly_chart(fig5)
 
+    # Extrair o ano da coluna 'data_inversa'
+    df['ano'] = pd.to_datetime(df['data_inversa']).dt.year
+    
+    # Agrupar por UF e ano para obter a soma de acidentes por estado e ano
+    acidentes_por_estado = df.groupby(['uf', 'ano']).size().reset_index(name='Quantidade de Acidentes')
+    
+    # Selecionar um ano específico ou mostrar a soma total
+    anos = sorted(acidentes_por_estado['ano'].unique())
+    ano_selecionado = st.sidebar.selectbox('Selecione o Ano', options=anos, key='year_select')
+    
+    # Filtrar o DataFrame pelo ano selecionado
+    df_ano = acidentes_por_estado[acidentes_por_estado['ano'] == ano_selecionado]
+    
+    # Criar o mapa coroplético
+    fig6 = px.choropleth(df_ano, 
+                        geojson='https://raw.githubusercontent.com/codeforamerica/click_that_hood/master/public/data/brazil-states.geojson',
+                        locations='uf', 
+                        featureidkey='properties.sigla', 
+                        color='Quantidade de Acidentes',
+                        hover_name='uf',
+                        title=f'Quantidade de Acidentes por Estado em {ano_selecionado}')
+    
+    fig.update_geos(fitbounds="locations", visible=False)
+    st.plotly_chart(fig6)
+    
 
 
 # Página de Visão Geral
