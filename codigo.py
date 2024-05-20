@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import plotly.express as px
 import geopandas as gpd
+from geobr import read_municipality
 # Sidebar (Menu Lateral)
 page = st.sidebar.selectbox("Escolha a Página", ["Visão Geral", "Filtros e Dados", "Gráficos de Acidentes e Casualidades ao Longo do Tempo", "Número de Acidentes por Hora do Dia"])
 def show_overview():
@@ -101,19 +102,11 @@ def show_filters_data():
                   title='Número de Acidentes por Hora do Dia')
     st.plotly_chart(fig5)
     
-    # Carregue o shapefile do Brasil
-    brasil = gpd.read_file('https://geoftp.ibge.gov.br/organizacao_do_territorio/malhas_territoriais/malhas_municipais/municipio_2019/Brasil/BR/BR_Municipios_2019.shp')
-    
-    # Agrupe os dados por cidade e calcule a quantidade de acidentes
-    df_grouped = df.groupby('cidade').size().reset_index(name='qtd_acidentes')
-    
-    # Faça o merge do dataframe com o geodataframe
-    gdf = brasil.merge(df_grouped, left_on='NM_MUNICIP', right_on='cidade')
+    # Leia os dados geoespaciais de todos os municípios do Brasil para um determinado ano
+    gdf = read_municipality(year=2010)
     
     # Plote o mapa
-    fig6, ax = plt.subplots(1, 1)
-    gdf.plot(column='qtd_acidentes', ax=ax, legend=True, cmap='YlOrRd')
-    st.plotly_chart(fig6)
+    gdf.plot()
 
 
 
