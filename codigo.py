@@ -102,7 +102,6 @@ def show_filters_data():
                   title='Número de Acidentes por Hora do Dia')
     st.plotly_chart(fig5)
     
-    # Leia os dados geoespaciais de todos os municípios do Brasil para um determinado ano
     gdf = read_municipality(year=2010)
     
     # Plote o mapa
