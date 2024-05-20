@@ -86,12 +86,38 @@ def show_filters_data():
                    title='Número de Acidentes ao Longo do Tempo')
     st.plotly_chart(fig3)
 
-    casualties = df_uf.groupby('data_inversa').agg({'mortos': 'sum', 'feridos_leves': 'sum', 'feridos_graves': 'sum', 'ilesos': 'sum'}).reset_index()
-    fig4 = px.scatter(casualties, x='data_inversa', y='mortos', title='Número de Mortos ao Longo do Tempo')
-    fig4.add_scatter(x=casualties['data_inversa'], y=casualties['feridos_leves'], mode='lines', name='Feridos Leves')
-    fig4.add_scatter(x=casualties['data_inversa'], y=casualties['feridos_graves'], mode='lines', name='Feridos Graves')
-    fig4.add_scatter(x=casualties['data_inversa'], y=casualties['ilesos'], mode='lines', name='Ilesos')
-    st.plotly_chart(fig4)
+    #casualties = df_uf.groupby('data_inversa').agg({'mortos': 'sum', 'feridos_leves': 'sum', 'feridos_graves': 'sum', 'ilesos': 'sum'}).reset_index()
+    #fig4 = px.line(casualties, x='data_inversa', y='mortos', title='Número de Mortos ao Longo do Tempo')
+    #fig4.add_scatter(x=casualties['data_inversa'], y=casualties['feridos_leves'], mode='lines', name='Feridos Leves')
+    #fig4.add_scatter(x=casualties['data_inversa'], y=casualties['feridos_graves'], mode='lines', name='Feridos Graves')
+    #fig4.add_scatter(x=casualties['data_inversa'], y=casualties['ilesos'], mode='lines', name='Ilesos')
+    #st.plotly_chart(fig4)
+
+    df_uf['year_month'] = df_uf['data_inversa'].dt.to_period('M')
+
+    # Agrupar os dados por mês e somar os valores
+    monthly_casualties = df_uf.groupby('year_month').agg({
+        'mortos': 'sum', 
+        'feridos_leves': 'sum', 
+        'feridos_graves': 'sum', 
+        'ilesos': 'sum'
+    }).reset_index()
+    
+    # Converter o período para string para fins de plotagem
+    monthly_casualties['year_month'] = monthly_casualties['year_month'].astype(str)
+    
+    # Criar o gráfico de barras empilhadas
+    fig = px.bar(
+        monthly_casualties, 
+        x='year_month', 
+        y=['mortos', 'feridos_leves', 'feridos_graves', 'ilesos'],
+        title='Número de Casualidades por Mês',
+        labels={'value': 'Total de Casualidades', 'year_month': 'Mês'},
+        color_discrete_sequence=['#FF0000', '#0000FF', '#FFA500', '#00FF00'] # Ajuste as cores conforme necessário
+    )
+    
+    fig.update_layout(barmode='stack')
+    st.plotly_chart(fig)
 
     # Gráfico de número de acidentes por hora do dia
     df_uf['hora'] = pd.to_datetime(df_uf['horario']).dt.hour
