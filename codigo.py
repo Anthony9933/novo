@@ -82,7 +82,7 @@ def show_filters_data():
     df_uf['data_inversa'] = pd.to_datetime(df_uf['data_inversa'])
 
     accidents_count = df_uf.groupby('data_inversa').size().reset_index(name='Número de Acidentes')
-    fig3 = px.line(accidents_count, x='data_inversa', y='Número de Acidentes',
+    fig3 = px.scatter(accidents_count, x='data_inversa', y='Número de Acidentes',
                    title='Número de Acidentes ao Longo do Tempo')
     st.plotly_chart(fig3)
 
