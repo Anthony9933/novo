@@ -87,7 +87,7 @@ def show_filters_data():
     st.plotly_chart(fig3)
 
     casualties = df_uf.groupby('data_inversa').agg({'mortos': 'sum', 'feridos_leves': 'sum', 'feridos_graves': 'sum', 'ilesos': 'sum'}).reset_index()
-    fig4 = px.scatter(casualties, x='data_inversa', y='mortos', title='Número de Mortos ao Longo do Tempo')
+    fig4 = px.line(casualties, x='data_inversa', y='mortos', title='Número de Mortos ao Longo do Tempo')
     fig4.add_scatter(x=casualties['data_inversa'], y=casualties['feridos_leves'], mode='lines', name='Feridos Leves')
     fig4.add_scatter(x=casualties['data_inversa'], y=casualties['feridos_graves'], mode='lines', name='Feridos Graves')
     fig4.add_scatter(x=casualties['data_inversa'], y=casualties['ilesos'], mode='lines', name='Ilesos')
