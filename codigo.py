@@ -1,9 +1,6 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
 import plotly.express as px
-import gdown
-import os
 
 # IDs dos arquivos no Google Drive
 file_ids = {
@@ -20,25 +17,14 @@ file_ids = {
     2023: "1nOOQVKrCwLWrl9M2hyEcbanCS8ngO10t"
 }
 
-# Função para baixar arquivos do Google Drive
-@st.cache
-def download_files(file_ids):
-    if not os.path.exists("data"):
-        os.makedirs("data")
-    for year, file_id in file_ids.items():
-        output = f"data/datatran{year}.csv"
-        if not os.path.exists(output):
-            gdown.download(f"https://drive.google.com/uc?export=download&id={file_id}", output, quiet=False)
-
-# Baixar os arquivos
-download_files(file_ids)
-
-# Função para carregar os dados de múltiplos anos
+# Função para carregar os dados diretamente do Google Drive
 @st.cache
 def load_data(years):
     dfs = []
     for year in years:
-        df = pd.read_csv(f'data/datatran{year}.csv', encoding='latin-1', delimiter=';')
+        file_id = file_ids[year]
+        url = f'https://drive.google.com/uc?id={file_id}'
+        df = pd.read_csv(url, encoding='latin-1', delimiter=';')
         df['ano'] = year
         dfs.append(df)
     return pd.concat(dfs, ignore_index=True)
