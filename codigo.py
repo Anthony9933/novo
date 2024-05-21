@@ -28,7 +28,7 @@ def download_files(file_ids):
     for year, file_id in file_ids.items():
         output = f"data/datatran{year}.csv"
         if not os.path.exists(output):
-            gdown.download(f"https://drive.google.com/uc?export=download&id={1fWGRmL6RV3tqLfcFOt4poCXH0C0Yv3NI}", output, quiet=False)
+            gdown.download(f"https://drive.google.com/uc?export=download&id={file_id}", output, quiet=False)
 
 # Baixar os arquivos
 download_files(file_ids)
@@ -38,7 +38,7 @@ download_files(file_ids)
 def load_data(years):
     dfs = []
     for year in years:
-        df = pd.read_csv(f'datatran{year}.csv', encoding='latin-1', delimiter=';')
+        df = pd.read_csv(f'data/datatran{year}.csv', encoding='latin-1', delimiter=';')
         df['ano'] = year
         dfs.append(df)
     return pd.concat(dfs, ignore_index=True)
