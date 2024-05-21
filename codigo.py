@@ -1,9 +1,37 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
 import plotly.express as px
-import glob
+import gdown
+import os
+
+# IDs dos arquivos no Google Drive
+file_ids = {
+    2013: "1tmO9ObhSVL-T-1SYfwmVWUy1ty7eSvfC",
+    2014: "1hWRjCjsfrFUQmng-nnEdFLEVkH7G1eFo",
+    2015: "1Zj4pMKTgs7gbkoPsFZOXf0I6NIlyW-Xm",
+    2016: "1tkaZ_f1h9BXV_wyMQBT9Q5MVFjiZB6u6",
+    2017: "1xdoSICx6jxQyaYu60hLknXInpzTfijmj",
+    2018: "1ySuJBVH2QXXidkPSGJRWgHn765WtW3_g",
+    2019: "1qNwih1aNhHcPpMjvWxLvBcciUehz2cTM",
+    2020: "1yxyhH2LyBKEAb_XBqaGEzIA1rY1aU1IP",
+    2021: "1Xje5rMD7hrlRO8rWSWoWaCco3E6RHWyA",
+    2022: "1V5eV7wBI1lMUd2lFnYV7XRBR46A0TLMZ",
+    2023: "1nOOQVKrCwLWrl9M2hyEcbanCS8ngO10t"
+}
+
+# Função para baixar arquivos do Google Drive
+@st.cache
+def download_files(file_ids):
+    if not os.path.exists("data"):
+        os.makedirs("data")
+    for year, file_id in file_ids.items():
+        output = f"data/datatran{year}.csv"
+        if not os.path.exists(output):
+            gdown.download(f"https://drive.google.com/uc?export=download&id={1fWGRmL6RV3tqLfcFOt4poCXH0C0Yv3NI?usp=sharing}", output, quiet=False)
+
+# Baixar os arquivos
+download_files(file_ids)
 
 # Função para carregar os dados de múltiplos anos
 @st.cache
