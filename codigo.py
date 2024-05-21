@@ -127,7 +127,6 @@ def show_filters_data():
     st.plotly_chart(fig5)
 
 
-def show_map(df):    
     # Extrair o ano da coluna 'data_inversa'
     df['ano'] = pd.to_datetime(df['data_inversa']).dt.year
     
@@ -152,7 +151,7 @@ def show_map(df):
     
     fig.update_geos(fitbounds="locations", visible=False)
     st.plotly_chart(fig6)
-    show_map(df)
+
 
 
 # Página de Visão Geral
