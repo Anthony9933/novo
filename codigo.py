@@ -85,11 +85,11 @@ def show_overview():
     st.write("Aproveite a exploração do projeto!")
 
 def show_filters_data():
-    st.header("Filtros e Dados")
+    #st.header("Filtros e Dados")
     
     # Exibir o dataframe filtrado
     st.subheader('Dados Filtrados')
-    st.dataframe(df_ano)
+    #st.dataframe(df_ano)
 
     st.header('Gráficos')
 
