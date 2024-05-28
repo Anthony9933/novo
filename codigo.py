@@ -168,7 +168,7 @@ def show_filters_data():
                         featureidkey='properties.sigla', 
                         color='Quantidade de Acidentes',
                         hover_name='uf',
-                        title=f'Quantidade de Acidentes por Estado em {ano_selecionado}'
+                        title='Quantidade de Acidentes por Estado em {ano_selecionado}'
                         color_continuous_scale='Reds'
     )
     
