@@ -163,17 +163,15 @@ def show_filters_data():
     df_ano_estado = acidentes_por_estado[acidentes_por_estado['ano'] == ano_selecionado]
     
     fig6 = px.choropleth(df_ano_estado, 
-                        fig6 = px.choropleth(df_ano_estado, 
-                    geojson='https://raw.githubusercontent.com/codeforamerica/click_that_hood/master/public/data/brazil-states.geojson',
-                    locations='uf', 
-                    featureidkey='properties.sigla', 
-                    color='Quantidade de Acidentes',
-                    hover_name='uf',
-                    title=f'Quantidade de Acidentes por Estado em {ano_selecionado}',
-                    color_continuous_scale='Reds')  # Alterando a paleta de cores para 'Reds'
-
-   fig6.update_geos(fitbounds="locations", visible=False)
-   st.plotly_chart(fig6)
+                        geojson='https://raw.githubusercontent.com/codeforamerica/click_that_hood/master/public/data/brazil-states.geojson',
+                        locations='uf', 
+                        featureidkey='properties.sigla', 
+                        color='Quantidade de Acidentes',
+                        hover_name='uf',
+                        title=f'Quantidade de Acidentes por Estado em {ano_selecionado}')
+    
+    fig6.update_geos(fitbounds="locations", visible=False)
+    st.plotly_chart(fig6)
 
 # Página de Visão Geral
 if page == "Visão Geral":
