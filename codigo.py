@@ -97,7 +97,7 @@ def show_filters_data():
     df_ano = df[df['ano'] == ano_selecionado]
     if UF != "Todos":
     # Exibir o dataframe filtrado
-    st.subheader('Dados Filtrados')
+    #st.subheader('Dados Filtrados')
     #st.dataframe(df_ano)
 
     st.header('Gráficos')
