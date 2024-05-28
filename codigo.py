@@ -38,14 +38,14 @@ st.sidebar.header("Configurações")
 page = st.sidebar.selectbox("Escolha a Página", ["Visão Geral", "Filtros e Dados"])
 
 # Seleção do ano e estado na barra lateral
-ano_selecionado = st.sidebar.selectbox('Selecione o Ano', options=years, key='year_select')
-estados = ["Todos"] + list(df['uf'].unique())
-UF = st.sidebar.selectbox('Selecione o UF', options=estados, key='filters_data_uf')
+#ano_selecionado = st.sidebar.selectbox('Selecione o Ano', options=years, key='year_select')
+#estados = ["Todos"] + list(df['uf'].unique())
+#UF = st.sidebar.selectbox('Selecione o UF', options=estados, key='filters_data_uf')
 
 # Filtrar os dados pelo ano e estado selecionados
-df_ano = df[df['ano'] == ano_selecionado]
-if UF != "Todos":
-    df_ano = df_ano[df_ano['uf'] == UF]
+#df_ano = df[df['ano'] == ano_selecionado]
+#if UF != "Todos":
+    #df_ano = df_ano[df_ano['uf'] == UF]
 
 def show_overview():
     # Visão Geral do Projeto
@@ -86,7 +86,16 @@ def show_overview():
 
 def show_filters_data():
     #st.header("Filtros e Dados")
+
+
+    # Seleção do ano e estado na barra lateral
+    ano_selecionado = st.sidebar.selectbox('Selecione o Ano', options=years, key='year_select')
+    estados = ["Todos"] + list(df['uf'].unique())
+    UF = st.sidebar.selectbox('Selecione o UF', options=estados, key='filters_data_uf')
     
+    # Filtrar os dados pelo ano e estado selecionados
+    df_ano = df[df['ano'] == ano_selecionado]
+    if UF != "Todos":
     # Exibir o dataframe filtrado
     st.subheader('Dados Filtrados')
     #st.dataframe(df_ano)
