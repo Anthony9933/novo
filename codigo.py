@@ -96,6 +96,7 @@ def show_filters_data():
     # Filtrar os dados pelo ano e estado selecionados
     df_ano = df[df['ano'] == ano_selecionado]
     if UF != "Todos":
+        df_ano = df_ano[df_ano['uf'] == UF]
     # Exibir o dataframe filtrado
     #st.subheader('Dados Filtrados')
     #st.dataframe(df_ano)
