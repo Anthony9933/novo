@@ -168,7 +168,9 @@ def show_filters_data():
                         featureidkey='properties.sigla', 
                         color='Quantidade de Acidentes',
                         hover_name='uf',
-                        title=f'Quantidade de Acidentes por Estado em {ano_selecionado}')
+                        title=f'Quantidade de Acidentes por Estado em {ano_selecionado}'
+                        color_continuous_scale='Reds'
+    )
     
     fig6.update_geos(fitbounds="locations", visible=False)
     st.plotly_chart(fig6)
