@@ -183,10 +183,8 @@ def load_population_data():
 def load_vehicle_data():
     try:
         vehicle_data = pd.read_csv('frota_munic_modelo_dezembro_2023.csv', encoding='latin-1')
-        st.write("Vehicle data loaded successfully")
         return vehicle_data
     except Exception as e:
-        st.write(f"Error loading vehicle data: {e}")
         return None
 
 # Carregar os dados adicionais
