@@ -24,7 +24,7 @@ file_ids = {
 }
 
 # Função para carregar os dados diretamente do Google Drive
-@st.cache
+@st.cache_data
 def load_data(years):
     dfs = []
     for year in years:
@@ -210,7 +210,7 @@ def show_analysis_2023():
     monthly_casualties_2023['year_month'] = monthly_casualties_2023['year_month'].astype(str)
     
     # Criar o gráfico de barras empilhadas
-    fig = px.bar(
+    fig10 = px.bar(
         monthly_casualties_2023, 
         x='year_month', 
         y=['mortos', 'feridos_leves', 'feridos_graves', 'ilesos'],
@@ -219,8 +219,8 @@ def show_analysis_2023():
         color_discrete_sequence=['#FF0000', '#0000FF', '#FFA500', '#00FF00'] # Ajuste as cores conforme necessário
     )
     
-    fig.update_layout(barmode='stack')
-    st.plotly_chart(fig)
+    fig10.update_layout(barmode='stack')
+    st.plotly_chart(fig10)
 
     # Gráfico de número de acidentes por hora do dia
     df_2023['hora'] = pd.to_datetime(df_2023['horario']).dt.hour
@@ -230,7 +230,7 @@ def show_analysis_2023():
     st.plotly_chart(fig11)
 
     # Mapa coroplético de acidentes por estado
-    acidentes_por_estado_2023 = df[df['ano'] == 2023].groupby('uf').size().reset_index(name='Quantidade de Acidentes')
+    acidentes_por_estado_2023 = df_2023.groupby('uf').size().reset_index(name='Quantidade de Acidentes')
     
     fig12 = px.choropleth(acidentes_por_estado_2023, 
                           geojson='https://raw.githubusercontent.com/codeforamerica/click_that_hood/master/public/data/brazil-states.geojson',
