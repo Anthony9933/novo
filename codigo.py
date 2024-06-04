@@ -39,9 +39,13 @@ def load_data(years):
 years = list(range(2013, 2024))
 df_acidentes = load_data(years)
 
+# Certifique-se de fornecer o caminho correto para os arquivos CSV
+path_habitantes = "cidades.csv"
+path_automoveis = "frota_munic_modelo_dezembro_2023.csv"
+
 # Carregando dados de habitantes e automóveis
-df_habitantes = pd.read_csv("path/to/cidades.csv", delimiter=";", encoding="latin-1")
-df_automoveis = pd.read_csv("path/to/frota_munic_modelo_dezembro_2023.csv", delimiter=";", encoding="latin-1")
+df_habitantes = pd.read_csv("cidades.csv", delimiter=";", encoding="latin-1")
+df_automoveis = pd.read_csv("frota_munic_modelo_dezembro_2023.csv", delimiter=";", encoding="latin-1")
 
 # Barra lateral
 st.sidebar.header("Configurações")
@@ -151,10 +155,8 @@ def show_filters_data():
 
     # Mapa coroplético de acidentes por estado
     acidentes_por_estado = df_acidentes.groupby(['uf', 'ano']).size().reset_index(name='Quantidade de Acidentes')
-    df_ano_estado = acidentes_por_estado[acidentes_por_estado['ano'] == ano_selecionado]
-    
-    fig6 = px.choropleth(df_ano_estado, 
-                        geojson='https://raw.githubusercontent.com/codeforamerica/click_that_hood/master/public/data/brazil-states.geojson',
+    acidentes_por_estado_ano = acidentes_por_estado[acidentes_por_estado['ano'] == ano_selecionado]
+    fig6 = px.choropleth(acidentes_por_estado_ano, geojson='https://raw.githubusercontent.com/codeforamerica/click_that_hood/master/public/data/brazil-states.geojson',
                         locations='uf', 
                         featureidkey='properties.sigla', 
                         color='Quantidade de Acidentes',
