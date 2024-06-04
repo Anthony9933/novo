@@ -174,7 +174,7 @@ def show_filters_data():
 @st.cache_data
 def load_population_data():
     try:
-        population_data = pd.read_csv('population_file.csv', encoding='latin-1')
+        population_data = pd.read_csv('cidades.csv', encoding='latin-1')
         st.write("População data loaded successfully")
         return population_data
     except Exception as e:
@@ -184,7 +184,7 @@ def load_population_data():
 @st.cache_data
 def load_vehicle_data():
     try:
-        vehicle_data = pd.read_csv('vehicle_file.csv', encoding='latin-1')
+        vehicle_data = pd.read_csv('frota_munic_modelo_dezembro_2023.csv', encoding='latin-1')
         st.write("Vehicle data loaded successfully")
         return vehicle_data
     except Exception as e:
