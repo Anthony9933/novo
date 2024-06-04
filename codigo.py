@@ -155,93 +155,12 @@ def show_filters_data():
                         featureidkey='properties.sigla', 
                         color='Quantidade de Acidentes',
                         hover_name='uf',
-                        title='Quantidade de Acidentes por Estado')
+                        title='Quantidade de Acidentes por Estado em {ano_selecionado}',
+                        color_continuous_scale='Reds'
+    )
     
     fig6.update_geos(fitbounds="locations", visible=False)
     st.plotly_chart(fig6)
-
-def show_analysis_2023():
-    # Seleção de estado e categoria de acidente na barra lateral
-    estado_selecionado = st.sidebar.selectbox('Selecione o Estado', options=estados, key='state_select')
-    categorias = ["Todos"] + list(df['tipo_acidente'].unique())
-    categoria_selecionada = st.sidebar.selectbox('Selecione a Categoria de Acidente', options=categorias, key='category_select')
-    
-    # Filtrar os dados pelo ano de 2023, estado e categoria selecionados
-    df_2023 = df[df['ano'] == 2023]
-    if estado_selecionado != "Todos":
-        df_2023 = df_2023[df_2023['uf'] == estado_selecionado]
-    if categoria_selecionada != "Todos":
-        df_2023 = df_2023[df_2023['tipo_acidente'] == categoria_selecionada]
-
-    st.header('Gráficos - Análise de 2023')
-
-    # Gráfico de quantidade de acidentes por município
-    contagem_acidentes_por_municipio_2023 = df_2023['municipio'].value_counts().reset_index()
-    contagem_acidentes_por_municipio_2023.columns = ['Município', 'Quantidade de Acidentes']
-    fig7 = px.bar(contagem_acidentes_por_municipio_2023, x='Município', y='Quantidade de Acidentes',
-                  title='Quantidade de Acidentes por Município - 2023')
-    st.plotly_chart(fig7)
-
-    # Gráfico de quantidade de mortos por município
-    soma_mortos_por_municipio_2023 = df_2023.groupby('municipio')['mortos'].sum().reset_index()
-    soma_mortos_por_municipio_2023.columns = ['Município', 'Quantidade de Mortos']
-    fig8 = px.line(soma_mortos_por_municipio_2023, x='Município', y='Quantidade de Mortos',
-                   title='Quantidade de Mortos por Município - 2023')
-    st.plotly_chart(fig8)
-
-    # Gráfico de acidentes e casualidades ao longo do tempo
-    df_2023['data_inversa'] = pd.to_datetime(df_2023['data_inversa'])
-    accidents_count_2023 = df_2023.groupby('data_inversa').size().reset_index(name='Número de Acidentes')
-    fig9 = px.scatter(accidents_count_2023, x='data_inversa', y='Número de Acidentes',
-                      title='Número de Acidentes ao Longo do Tempo - 2023')
-    st.plotly_chart(fig9)
-
-    df_2023['year_month'] = df_2023['data_inversa'].dt.to_period('M')
-
-    # Agrupar os dados por mês e somar os valores
-    monthly_casualties_2023 = df_2023.groupby('year_month').agg({
-        'mortos': 'sum', 
-        'feridos_leves': 'sum', 
-        'feridos_graves': 'sum', 
-        'ilesos': 'sum'
-    }).reset_index()
-    
-    # Converter o período para string para fins de plotagem
-    monthly_casualties_2023['year_month'] = monthly_casualties_2023['year_month'].astype(str)
-    
-    # Criar o gráfico de barras empilhadas
-    fig10 = px.bar(
-        monthly_casualties_2023, 
-        x='year_month', 
-        y=['mortos', 'feridos_leves', 'feridos_graves', 'ilesos'],
-        title='Número de Casualidades por Mês - 2023',
-        labels={'value': 'Total de Casualidades', 'year_month': 'Mês'},
-        color_discrete_sequence=['#FF0000', '#0000FF', '#FFA500', '#00FF00'] # Ajuste as cores conforme necessário
-    )
-    
-    fig10.update_layout(barmode='stack')
-    st.plotly_chart(fig10)
-
-    # Gráfico de número de acidentes por hora do dia
-    df_2023['hora'] = pd.to_datetime(df_2023['horario']).dt.hour
-    accidents_by_hour_2023 = df_2023.groupby('hora').size().reset_index(name='Número de Acidentes')
-    fig11 = px.bar(accidents_by_hour_2023, x='hora', y='Número de Acidentes',
-                   title='Número de Acidentes por Hora do Dia - 2023')
-    st.plotly_chart(fig11)
-
-    # Mapa coroplético de acidentes por estado
-    acidentes_por_estado_2023 = df_2023.groupby('uf').size().reset_index(name='Quantidade de Acidentes')
-    
-    fig12 = px.choropleth(acidentes_por_estado_2023, 
-                          geojson='https://raw.githubusercontent.com/codeforamerica/click_that_hood/master/public/data/brazil-states.geojson',
-                          locations='uf', 
-                          featureidkey='properties.sigla', 
-                          color='Quantidade de Acidentes',
-                          hover_name='uf',
-                          title='Quantidade de Acidentes por Estado - 2023')
-    
-    fig12.update_geos(fitbounds="locations", visible=False)
-    st.plotly_chart(fig12)
 
 if page == "Visão Geral":
     show_overview()
