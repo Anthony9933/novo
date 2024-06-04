@@ -177,7 +177,7 @@ def load_population_data():
 
 @st.cache_data
 def load_vehicle_data():
-    return pd.read_csv('frotas_munic_modelo_dezembro_2023.csv', encoding='latin-1', delimiter=';')
+    return pd.read_csv('frota_munic_modelo_dezembro_2023.csv', encoding='latin-1', delimiter=';')
 
 population_df = load_population_data()
 vehicle_df = load_vehicle_data()
