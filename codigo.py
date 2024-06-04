@@ -41,7 +41,7 @@ df = load_data(years)
 
 # Barra lateral
 st.sidebar.header("Configurações")
-page = st.sidebar.selectbox("Escolha a Página", ["Visão Geral", "Filtros e Dados", "Análise 2023"])
+page = st.sidebar.selectbox("Escolha a Página", ["Visão Geral", "Filtros e Dados"])
 
 def show_overview():
     # Visão geral 
@@ -166,5 +166,3 @@ if page == "Visão Geral":
     show_overview()
 elif page == "Filtros e Dados":
     show_filters_data()
-elif page == "Análise 2023":
-    show_analysis_2023()
