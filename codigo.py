@@ -35,16 +35,16 @@ def load_data(years):
         dfs.append(df)
     return pd.concat(dfs, ignore_index=True)
 
-#carregando dados dos acidentes de 2013 a 2023
+# Carregando dados dos acidentes de 2013 a 2023
 years = list(range(2013, 2024))
 df = load_data(years)
 
-#barra lateral
+# Barra lateral
 st.sidebar.header("Configurações")
 page = st.sidebar.selectbox("Escolha a Página", ["Visão Geral", "Filtros e Dados", "Análise 2023"])
 
 def show_overview():
-    # visão geral 
+    # Visão geral 
     st.header("Visão Geral do Projeto")
     st.write("Bem-vindo ao projeto de Visualização de dados da base de dados da PRF. Este projeto gira em torno da análise e apresentação "
              "de dados de acidentes, localização, motivos e categorias. O conjunto de dados contém várias colunas fornecendo insights "
@@ -79,9 +79,6 @@ def show_overview():
     st.write("Aproveite a exploração do projeto!")
 
 def show_filters_data():
-    #st.header("Filtros e Dados")
-
-
     # Seleção do ano e estado na barra lateral
     ano_selecionado = st.sidebar.selectbox('Selecione o Ano', options=years, key='year_select')
     estados = ["Todos"] + list(df['uf'].unique())
@@ -91,9 +88,6 @@ def show_filters_data():
     df_ano = df[df['ano'] == ano_selecionado]
     if UF != "Todos":
         df_ano = df_ano[df_ano['uf'] == UF]
-    # Exibir o dataframe filtrado
-    #st.subheader('Dados Filtrados')
-    #st.dataframe(df_ano)
 
     st.header('Gráficos')
 
@@ -113,7 +107,6 @@ def show_filters_data():
 
     # Gráfico de acidentes e casualidades ao longo do tempo
     df_ano['data_inversa'] = pd.to_datetime(df_ano['data_inversa'])
-
     accidents_count = df_ano.groupby('data_inversa').size().reset_index(name='Número de Acidentes')
     fig3 = px.scatter(accidents_count, x='data_inversa', y='Número de Acidentes',
                       title='Número de Acidentes ao Longo do Tempo')
@@ -162,170 +155,97 @@ def show_filters_data():
                         featureidkey='properties.sigla', 
                         color='Quantidade de Acidentes',
                         hover_name='uf',
-                        title='Quantidade de Acidentes por Estado em {ano_selecionado}',
-                        color_continuous_scale='Reds'
-    )
+                        title='Quantidade de Acidentes por Estado')
     
     fig6.update_geos(fitbounds="locations", visible=False)
     st.plotly_chart(fig6)
 
-
-# Funções para carregar as novas bases de dados
-@st.cache_data
-def load_population_data():
-    try:
-        population_data = pd.read_csv('cidades.csv', encoding='latin-1')
-        return population_data
-    except Exception as e:
-        return None
-
-@st.cache_data
-def load_vehicle_data():
-    try:
-        vehicle_data = pd.read_csv('frota_munic_modelo_dezembro_2023.csv', encoding='latin-1')
-        return vehicle_data
-    except Exception as e:
-        return None
-
-# Carregar os dados adicionais
-population_df = load_population_data()
-vehicle_df = load_vehicle_data()
-
-# Verificar se os dados foram carregados corretamente
-if population_df is not None:
-    st.write("Population DataFrame:", population_df.head())
-else:
-    st.write("Failed to load population data.")
-
-if vehicle_df is not None:
-    st.write("Vehicle DataFrame:", vehicle_df.head())
-else:
-    st.write("Failed to load vehicle data.")
-
-# Adicionar a nova página ao menu lateral e a lógica para mostrar a análise de 2023
-def show_2023_analysis():
-    st.header("Análise de 2023")
-    # Funções para carregar as novas bases de dados
-@st.cache_data
-def load_population_data():
-    try:
-        population_data = pd.read_csv('cidades.csv', encoding='latin-1')
-        return population_data
-    except Exception as e:
-        return None
-
-@st.cache_data
-def load_vehicle_data():
-    try:
-        vehicle_data = pd.read_csv('frota_munic_modelo_dezembro_2023.csv', encoding='latin-1')
-        return vehicle_data
-    except Exception as e:
-        return None
-
-# Carregar os dados adicionais
-population_df = load_population_data()
-vehicle_df = load_vehicle_data()
-
-# Verificar se os dados foram carregados corretamente
-if population_df is not None:
-    st.write("Population DataFrame:", population_df.head())
-else:
-    st.write("Failed to load population data.")
-
-if vehicle_df is not None:
-    st.write("Vehicle DataFrame:", vehicle_df.head())
-else:
-    st.write("Failed to load vehicle data.")
-
-    # Filtrar os dados de acidentes para 2023
-    df_2023 = df[df['ano'] == 2023]
-
-    # Verificar se as colunas 'municipio' e 'NOME DO MUNICÍPIO' estão presentes
-    if 'municipio' not in df_2023.columns:
-        st.write("A coluna 'municipio' não está presente nos dados de acidentes.")
-        return
-
-    if population_df is not None:
-        if 'NOME DO MUNICÍPIO' not in population_df.columns:
-            st.write("A coluna 'NOME DO MUNICÍPIO' não está presente nos dados de população.")
-            return
-
-        # Merge com a base de população
-        df_merged = df_2023.merge(population_df, left_on='municipio', right_on='NOME DO MUNICÍPIO', how='left')
-        st.write("Merge with population data successful.")
-    else:
-        st.write("População data is not available.")
-        return
-
-    # Verificar se as colunas 'municipio' e 'MUNICIPIO' estão presentes
-    if vehicle_df is not None:
-        if 'MUNICIPIO' not in vehicle_df.columns:
-            st.write("A coluna 'MUNICIPIO' não está presente nos dados de veículos.")
-            return
-
-        # Merge com a base de veículos
-        df_merged = df_merged.merge(vehicle_df, left_on='municipio', right_on='MUNICIPIO', how='left')
-        st.write("Merge with vehicle data successful.")
-    else:
-        st.write("Vehicle data is not available.")
-        return
-
-    # Gráfico de acidentes por quantidade de habitantes
-    df_merged['acidentes_por_habitante'] = df_merged.groupby('municipio')['id'].transform('count') / df_merged['POPULAÇÃO ESTIMADA']
-    fig1 = px.scatter(df_merged, x='POPULAÇÃO ESTIMADA', y='acidentes_por_habitante',
-                      title='Acidentes por Quantidade de Habitantes',
-                      labels={'POPULAÇÃO ESTIMADA': 'População Estimada', 'acidentes_por_habitante': 'Acidentes por Habitante'})
-    st.plotly_chart(fig1)
-
-    # Gráfico de acidentes por tipo de veículo
-    vehicle_types = ['AUTOMOVEL', 'CAMINHAO', 'MOTOCICLETA', 'ONIBUS', 'UTILITARIO']
-    for vehicle_type in vehicle_types:
-        df_merged[f'acidentes_por_{vehicle_type.lower()}'] = df_merged.groupby('municipio')['id'].transform('count') / df_merged[vehicle_type]
+def show_analysis_2023():
+    # Seleção de estado e categoria de acidente na barra lateral
+    estado_selecionado = st.sidebar.selectbox('Selecione o Estado', options=estados, key='state_select')
+    categorias = ["Todos"] + list(df['tipo_acidente'].unique())
+    categoria_selecionada = st.sidebar.selectbox('Selecione a Categoria de Acidente', options=categorias, key='category_select')
     
-    fig2 = px.scatter_matrix(df_merged, dimensions=[f'acidentes_por_{vt.lower()}' for vt in vehicle_types],
-                             title='Acidentes por Tipo de Veículo',
-                             labels={f'acidentes_por_{vt.lower()}': f'Acidentes por {vt}' for vt in vehicle_types})
-    st.plotly_chart(fig2)
+    # Filtrar os dados pelo ano de 2023, estado e categoria selecionados
+    df_2023 = df[df['ano'] == 2023]
+    if estado_selecionado != "Todos":
+        df_2023 = df_2023[df_2023['uf'] == estado_selecionado]
+    if categoria_selecionada != "Todos":
+        df_2023 = df_2023[df_2023['tipo_acidente'] == categoria_selecionada]
 
-    # Heatmap de distribuição de acidentes por dia da semana e hora
-    df_merged['hora'] = pd.to_datetime(df_merged['horario']).dt.hour
-    df_merged['dia_semana'] = pd.Categorical(df_merged['dia_semana'], 
-                                             categories=['segunda-feira', 'terça-feira', 'quarta-feira', 'quinta-feira', 'sexta-feira', 'sábado', 'domingo'], 
-                                             ordered=True)
-    heatmap_data = df_merged.groupby(['dia_semana', 'hora']).size().reset_index(name='Número de Acidentes')
-    heatmap_data = heatmap_data.pivot('dia_semana', 'hora', 'Número de Acidentes')
-    fig3 = px.imshow(heatmap_data, aspect='auto', title='Distribuição de Acidentes por Dia da Semana e Hora')
-    st.plotly_chart(fig3)
+    st.header('Gráficos - Análise de 2023')
 
-    # Gráfico de barras empilhadas por tipo de acidente e classificação
-    accident_types = df_merged.groupby(['tipo_acidente', 'classificacao_acidente']).size().reset_index(name='counts')
-    fig4 = px.bar(accident_types, x='tipo_acidente', y='counts', color='classificacao_acidente',
-                  title='Distribuição de Acidentes por Tipo e Classificação',
-                  labels={'tipo_acidente': 'Tipo de Acidente', 'counts': 'Número de Acidentes', 'classificacao_acidente': 'Classificação'})
-    st.plotly_chart(fig4)
+    # Gráfico de quantidade de acidentes por município
+    contagem_acidentes_por_municipio_2023 = df_2023['municipio'].value_counts().reset_index()
+    contagem_acidentes_por_municipio_2023.columns = ['Município', 'Quantidade de Acidentes']
+    fig7 = px.bar(contagem_acidentes_por_municipio_2023, x='Município', y='Quantidade de Acidentes',
+                  title='Quantidade de Acidentes por Município - 2023')
+    st.plotly_chart(fig7)
 
-    # Gráfico de barras empilhadas por condição meteorológica e tipo de acidente
-    weather_conditions = df_merged.groupby(['condicao_metereologica', 'tipo_acidente']).size().reset_index(name='counts')
-    fig5 = px.bar(weather_conditions, x='condicao_metereologica', y='counts', color='tipo_acidente',
-                  title='Distribuição de Acidentes por Condição Meteorológica e Tipo de Acidente',
-                  labels={'condicao_metereologica': 'Condição Meteorológica', 'counts': 'Número de Acidentes', 'tipo_acidente': 'Tipo de Acidente'})
-    st.plotly_chart(fig5)
+    # Gráfico de quantidade de mortos por município
+    soma_mortos_por_municipio_2023 = df_2023.groupby('municipio')['mortos'].sum().reset_index()
+    soma_mortos_por_municipio_2023.columns = ['Município', 'Quantidade de Mortos']
+    fig8 = px.line(soma_mortos_por_municipio_2023, x='Município', y='Quantidade de Mortos',
+                   title='Quantidade de Mortos por Município - 2023')
+    st.plotly_chart(fig8)
 
-    # Gráfico de barras empilhadas por uso do solo e tipo de pista
-    road_conditions = df_merged.groupby(['uso_solo', 'tipo_pista']).size().reset_index(name='counts')
-    fig6 = px.bar(road_conditions, x='uso_solo', y='counts', color='tipo_pista',
-                  title='Distribuição de Acidentes por Uso do Solo e Tipo de Pista',
-                  labels={'uso_solo': 'Uso do Solo', 'counts': 'Número de Acidentes', 'tipo_pista': 'Tipo de Pista'})
-    st.plotly_chart(fig6)
+    # Gráfico de acidentes e casualidades ao longo do tempo
+    df_2023['data_inversa'] = pd.to_datetime(df_2023['data_inversa'])
+    accidents_count_2023 = df_2023.groupby('data_inversa').size().reset_index(name='Número de Acidentes')
+    fig9 = px.scatter(accidents_count_2023, x='data_inversa', y='Número de Acidentes',
+                      title='Número de Acidentes ao Longo do Tempo - 2023')
+    st.plotly_chart(fig9)
 
-# Página de Visão Geral
+    df_2023['year_month'] = df_2023['data_inversa'].dt.to_period('M')
+
+    # Agrupar os dados por mês e somar os valores
+    monthly_casualties_2023 = df_2023.groupby('year_month').agg({
+        'mortos': 'sum', 
+        'feridos_leves': 'sum', 
+        'feridos_graves': 'sum', 
+        'ilesos': 'sum'
+    }).reset_index()
+    
+    # Converter o período para string para fins de plotagem
+    monthly_casualties_2023['year_month'] = monthly_casualties_2023['year_month'].astype(str)
+    
+    # Criar o gráfico de barras empilhadas
+    fig = px.bar(
+        monthly_casualties_2023, 
+        x='year_month', 
+        y=['mortos', 'feridos_leves', 'feridos_graves', 'ilesos'],
+        title='Número de Casualidades por Mês - 2023',
+        labels={'value': 'Total de Casualidades', 'year_month': 'Mês'},
+        color_discrete_sequence=['#FF0000', '#0000FF', '#FFA500', '#00FF00'] # Ajuste as cores conforme necessário
+    )
+    
+    fig.update_layout(barmode='stack')
+    st.plotly_chart(fig)
+
+    # Gráfico de número de acidentes por hora do dia
+    df_2023['hora'] = pd.to_datetime(df_2023['horario']).dt.hour
+    accidents_by_hour_2023 = df_2023.groupby('hora').size().reset_index(name='Número de Acidentes')
+    fig11 = px.bar(accidents_by_hour_2023, x='hora', y='Número de Acidentes',
+                   title='Número de Acidentes por Hora do Dia - 2023')
+    st.plotly_chart(fig11)
+
+    # Mapa coroplético de acidentes por estado
+    acidentes_por_estado_2023 = df[df['ano'] == 2023].groupby('uf').size().reset_index(name='Quantidade de Acidentes')
+    
+    fig12 = px.choropleth(acidentes_por_estado_2023, 
+                          geojson='https://raw.githubusercontent.com/codeforamerica/click_that_hood/master/public/data/brazil-states.geojson',
+                          locations='uf', 
+                          featureidkey='properties.sigla', 
+                          color='Quantidade de Acidentes',
+                          hover_name='uf',
+                          title='Quantidade de Acidentes por Estado - 2023')
+    
+    fig12.update_geos(fitbounds="locations", visible=False)
+    st.plotly_chart(fig12)
+
 if page == "Visão Geral":
     show_overview()
-
-# Página de Filtros e Dados
 elif page == "Filtros e Dados":
     show_filters_data()
-
-# Página de Análise 2023
 elif page == "Análise 2023":
-    show_2023_analysis()
+    show_analysis_2023()
