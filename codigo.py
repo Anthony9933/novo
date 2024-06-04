@@ -35,9 +35,32 @@ def load_data(years):
         dfs.append(df)
     return pd.concat(dfs, ignore_index=True)
 
+@st.cache_data
+def load_population_data():
+    return pd.read_csv('cidades.csv', encoding='latin-1', delimiter=';')
+
+@st.cache_data
+def load_vehicle_fleet_data():
+    return pd.read_csv('frota_munic_modelo_dezembro_2023.csv', encoding='latin-1', delimiter=';')
+
 # Carregando dados dos acidentes de 2013 a 2023
 years = list(range(2013, 2024))
 df = load_data(years)
+
+# Carregar os dados de população e frota de automóveis
+pop_data = load_population_data()
+fleet_data = load_vehicle_fleet_data()
+
+# Filtrar as colunas relevantes e renomear para consistência
+pop_data = pop_data[['UF', 'NOME DO MUNICÍPIO', 'POPULAÇÃO ESTIMADA']]
+pop_data.columns = ['UF', 'Município', 'População']
+
+fleet_data = fleet_data[['UF', 'MUNICIPIO', 'TOTAL']]
+fleet_data.columns = ['UF', 'Município', 'Total Veículos']
+
+# Mesclar os dados de acidentes com os dados de população e frota
+df = df.merge(pop_data, left_on=['uf', 'municipio'], right_on=['UF', 'Município'], how='left')
+df = df.merge(fleet_data, left_on=['uf', 'municipio'], right_on=['UF', 'Município'], how='left')
 
 # Barra lateral
 st.sidebar.header("Configurações")
@@ -105,12 +128,26 @@ def show_filters_data():
                    title='Quantidade de Mortos por Município')
     st.plotly_chart(fig2)
 
+    # Novo gráfico: Acidentes por 1000 habitantes
+    df_ano['Acidentes por 1000 Habitantes'] = (df_ano['municipio'].map(df_ano['municipio'].value_counts()) / df_ano['População']) * 1000
+    acidentes_por_habitante = df_ano[['municipio', 'Acidentes por 1000 Habitantes']].drop_duplicates()
+    fig3 = px.bar(acidentes_por_habitante, x='municipio', y='Acidentes por 1000 Habitantes',
+                  title='Acidentes por 1000 Habitantes')
+    st.plotly_chart(fig3)
+
+    # Novo gráfico: Acidentes por 1000 veículos
+    df_ano['Acidentes por 1000 Veículos'] = (df_ano['municipio'].map(df_ano['municipio'].value_counts()) / df_ano['Total Veículos']) * 1000
+    acidentes_por_veiculo = df_ano[['municipio', 'Acidentes por 1000 Veículos']].drop_duplicates()
+    fig4 = px.bar(acidentes_por_veiculo, x='municipio', y='Acidentes por 1000 Veículos',
+                  title='Acidentes por 1000 Veículos')
+    st.plotly_chart(fig4)
+
     # Gráfico de acidentes e casualidades ao longo do tempo
     df_ano['data_inversa'] = pd.to_datetime(df_ano['data_inversa'])
     accidents_count = df_ano.groupby('data_inversa').size().reset_index(name='Número de Acidentes')
-    fig3 = px.scatter(accidents_count, x='data_inversa', y='Número de Acidentes',
+    fig5 = px.scatter(accidents_count, x='data_inversa', y='Número de Acidentes',
                       title='Número de Acidentes ao Longo do Tempo')
-    st.plotly_chart(fig3)
+    st.plotly_chart(fig5)
 
     df_ano['year_month'] = df_ano['data_inversa'].dt.to_period('M')
 
@@ -126,7 +163,7 @@ def show_filters_data():
     monthly_casualties['year_month'] = monthly_casualties['year_month'].astype(str)
     
     # Criar o gráfico de barras empilhadas
-    fig = px.bar(
+    fig6 = px.bar(
         monthly_casualties, 
         x='year_month', 
         y=['mortos', 'feridos_leves', 'feridos_graves', 'ilesos'],
@@ -135,32 +172,32 @@ def show_filters_data():
         color_discrete_sequence=['#FF0000', '#0000FF', '#FFA500', '#00FF00'] # Ajuste as cores conforme necessário
     )
     
-    fig.update_layout(barmode='stack')
-    st.plotly_chart(fig)
+    fig6.update_layout(barmode='stack')
+    st.plotly_chart(fig6)
 
     # Gráfico de número de acidentes por hora do dia
     df_ano['hora'] = pd.to_datetime(df_ano['horario']).dt.hour
     accidents_by_hour = df_ano.groupby('hora').size().reset_index(name='Número de Acidentes')
-    fig5 = px.bar(accidents_by_hour, x='hora', y='Número de Acidentes',
+    fig7 = px.bar(accidents_by_hour, x='hora', y='Número de Acidentes',
                   title='Número de Acidentes por Hora do Dia')
-    st.plotly_chart(fig5)
+    st.plotly_chart(fig7)
 
     # Mapa coroplético de acidentes por estado
     acidentes_por_estado = df.groupby(['uf', 'ano']).size().reset_index(name='Quantidade de Acidentes')
     df_ano_estado = acidentes_por_estado[acidentes_por_estado['ano'] == ano_selecionado]
     
-    fig6 = px.choropleth(df_ano_estado, 
+    fig8 = px.choropleth(df_ano_estado, 
                         geojson='https://raw.githubusercontent.com/codeforamerica/click_that_hood/master/public/data/brazil-states.geojson',
                         locations='uf', 
                         featureidkey='properties.sigla', 
                         color='Quantidade de Acidentes',
                         hover_name='uf',
-                        title='Quantidade de Acidentes por Estado em {ano_selecionado}',
+                        title=f'Quantidade de Acidentes por Estado em {ano_selecionado}',
                         color_continuous_scale='Reds'
     )
     
-    fig6.update_geos(fitbounds="locations", visible=False)
-    st.plotly_chart(fig6)
+    fig8.update_geos(fitbounds="locations", visible=False)
+    st.plotly_chart(fig8)
 
 if page == "Visão Geral":
     show_overview()
