@@ -37,11 +37,11 @@ def load_data(years):
 
 @st.cache_data
 def load_population_data():
-    return pd.read_csv('cidades.csv', encoding='latin-1', delimiter=';')
+    return pd.read_csv('cidades.csv', encoding='latin-1', delimiter=',')
 
 @st.cache_data
 def load_vehicle_fleet_data():
-    return pd.read_csv('frota_munic_modelo_dezembro_2023.csv', encoding='latin-1', delimiter=';')
+    return pd.read_csv('frota_munic_modelo_dezembro_2023.csv', encoding='latin-1', delimiter=',')
 
 # Carregando dados dos acidentes de 2013 a 2023
 years = list(range(2013, 2024))
@@ -58,9 +58,18 @@ pop_data.columns = ['UF', 'Município', 'População']
 fleet_data = fleet_data[['UF', 'MUNICIPIO', 'TOTAL']]
 fleet_data.columns = ['UF', 'Município', 'Total Veículos']
 
+# Padronizar os nomes dos municípios para capslock
+df['municipio'] = df['municipio'].str.upper()
+pop_data['Município'] = pop_data['Município'].str.upper()
+fleet_data['Município'] = fleet_data['Município'].str.upper()
+
 # Mesclar os dados de acidentes com os dados de população e frota
 df = df.merge(pop_data, left_on=['uf', 'municipio'], right_on=['UF', 'Município'], how='left')
 df = df.merge(fleet_data, left_on=['uf', 'municipio'], right_on=['UF', 'Município'], how='left')
+
+# Preencher valores ausentes
+df['População'].fillna(0, inplace=True)
+df['Total Veículos'].fillna(0, inplace=True)
 
 # Barra lateral
 st.sidebar.header("Configurações")
