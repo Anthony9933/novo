@@ -37,11 +37,15 @@ def load_data(years):
 
 # Carregando dados dos acidentes de 2013 a 2023
 years = list(range(2013, 2024))
-df = load_data(years)
+df_acidentes = load_data(years)
+
+# Carregando dados de habitantes e automóveis
+df_habitantes = pd.read_csv("path/to/cidades.csv", delimiter=";", encoding="latin-1")
+df_automoveis = pd.read_csv("path/to/frota_munic_modelo_dezembro_2023.csv", delimiter=";", encoding="latin-1")
 
 # Barra lateral
 st.sidebar.header("Configurações")
-page = st.sidebar.selectbox("Escolha a Página", ["Visão Geral", "Filtros e Dados"])
+page = st.sidebar.selectbox("Escolha a Página", ["Visão Geral", "Filtros e Dados", "Comparação"])
 
 def show_overview():
     # Visão geral 
@@ -81,11 +85,11 @@ def show_overview():
 def show_filters_data():
     # Seleção do ano e estado na barra lateral
     ano_selecionado = st.sidebar.selectbox('Selecione o Ano', options=years, key='year_select')
-    estados = ["Todos"] + list(df['uf'].unique())
+    estados = ["Todos"] + list(df_acidentes['uf'].unique())
     UF = st.sidebar.selectbox('Selecione o UF', options=estados, key='filters_data_uf')
     
     # Filtrar os dados pelo ano e estado selecionados
-    df_ano = df[df['ano'] == ano_selecionado]
+    df_ano = df_acidentes[df_acidentes['ano'] == ano_selecionado]
     if UF != "Todos":
         df_ano = df_ano[df_ano['uf'] == UF]
 
@@ -146,7 +150,7 @@ def show_filters_data():
     st.plotly_chart(fig5)
 
     # Mapa coroplético de acidentes por estado
-    acidentes_por_estado = df.groupby(['uf', 'ano']).size().reset_index(name='Quantidade de Acidentes')
+    acidentes_por_estado = df_acidentes.groupby(['uf', 'ano']).size().reset_index(name='Quantidade de Acidentes')
     df_ano_estado = acidentes_por_estado[acidentes_por_estado['ano'] == ano_selecionado]
     
     fig6 = px.choropleth(df_ano_estado, 
@@ -162,7 +166,49 @@ def show_filters_data():
     fig6.update_geos(fitbounds="locations", visible=False)
     st.plotly_chart(fig6)
 
+def show_comparison():
+    # Seleção do ano na barra lateral
+    ano_selecionado = st.sidebar.selectbox('Selecione o Ano', options=years, key='comparison_year_select')
+
+    # Filtrar os dados pelo ano selecionado
+    df_ano = df_acidentes[df_acidentes['ano'] == ano_selecionado]
+
+    # Agregar os dados de acidentes por município
+    acidentes_por_municipio = df_ano['municipio'].value_counts().reset_index()
+    acidentes_por_municipio.columns = ['Município', 'Quantidade de Acidentes']
+
+    # Preparar dados de habitantes
+    df_habitantes['Município'] = df_habitantes['NOME DO MUNICÍPIO'].str.upper()
+    df_habitantes_selecionado = df_habitantes[['Município', 'POPULAÇÃO ESTIMADA']]
+
+    # Preparar dados de automóveis
+    df_automoveis['Município'] = df_automoveis['MUNICIPIO'].str.upper()
+    df_automoveis_selecionado = df_automoveis[['Município', 'TOTAL']]
+
+    # Mesclar os dados
+    acidentes_habitantes = pd.merge(acidentes_por_municipio, df_habitantes_selecionado, on='Município', how='inner')
+    acidentes_habitantes_automoveis = pd.merge(acidentes_habitantes, df_automoveis_selecionado, on='Município', how='inner')
+    acidentes_habitantes_automoveis.columns = ['Município', 'Quantidade de Acidentes', 'População Estimada', 'Total de Automóveis']
+
+    # Calcular acidentes por habitante e por automóvel
+    acidentes_habitantes_automoveis['Acidentes por Habitante'] = acidentes_habitantes_automoveis['Quantidade de Acidentes'] / acidentes_habitantes_automoveis['População Estimada']
+    acidentes_habitantes_automoveis['Acidentes por Automóvel'] = acidentes_habitantes_automoveis['Quantidade de Acidentes'] / acidentes_habitantes_automoveis['Total de Automóveis']
+
+    st.header('Comparação de Acidentes, Habitantes e Automóveis')
+
+    # Gráfico de acidentes por habitante
+    fig1 = px.bar(acidentes_habitantes_automoveis, x='Município', y='Acidentes por Habitante',
+                  title='Quantidade de Acidentes por Habitante')
+    st.plotly_chart(fig1)
+
+    # Gráfico de acidentes por automóvel
+    fig2 = px.bar(acidentes_habitantes_automoveis, x='Município', y='Acidentes por Automóvel',
+                  title='Quantidade de Acidentes por Automóvel')
+    st.plotly_chart(fig2)
+
 if page == "Visão Geral":
     show_overview()
 elif page == "Filtros e Dados":
     show_filters_data()
+elif page == "Comparação":
+    show_comparison()
