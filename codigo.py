@@ -175,10 +175,8 @@ def show_filters_data():
 def load_population_data():
     try:
         population_data = pd.read_csv('cidades.csv', encoding='latin-1')
-        st.write("População data loaded successfully")
         return population_data
     except Exception as e:
-        st.write(f"Error loading population data: {e}")
         return None
 
 @st.cache_data
