@@ -3,8 +3,8 @@ import pandas as pd
 import plotly.express as px
 
 st.set_page_config(
-    page_title="Visualização de Dados da PRF",
-    page_icon="🚓",  # Você pode usar um emoji ou um link para uma imagem
+    page_title="Acidentes PRF",
+    page_icon="🚓",
     layout="wide"
 )
 
