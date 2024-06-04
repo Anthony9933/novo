@@ -173,29 +173,78 @@ def show_filters_data():
 # Funções para carregar as novas bases de dados
 @st.cache_data
 def load_population_data():
-    return pd.read_csv('cidades.csv', encoding='latin-1', delimiter=';')
+    try:
+        population_data = pd.read_csv('population_file.csv', encoding='latin-1')
+        st.write("População data loaded successfully")
+        return population_data
+    except Exception as e:
+        st.write(f"Error loading population data: {e}")
+        return None
 
 @st.cache_data
 def load_vehicle_data():
-    return pd.read_csv('frota_munic_modelo_dezembro_2023.csv', encoding='latin-1', delimiter=';')
+    try:
+        vehicle_data = pd.read_csv('vehicle_file.csv', encoding='latin-1')
+        st.write("Vehicle data loaded successfully")
+        return vehicle_data
+    except Exception as e:
+        st.write(f"Error loading vehicle data: {e}")
+        return None
 
+# Carregar os dados adicionais
 population_df = load_population_data()
 vehicle_df = load_vehicle_data()
 
+# Verificar se os dados foram carregados corretamente
+if population_df is not None:
+    st.write("Population DataFrame:", population_df.head())
+else:
+    st.write("Failed to load population data.")
+
+if vehicle_df is not None:
+    st.write("Vehicle DataFrame:", vehicle_df.head())
+else:
+    st.write("Failed to load vehicle data.")
+
+# Adicionar a nova página ao menu lateral e a lógica para mostrar a análise de 2023
 def show_2023_analysis():
     st.header("Análise de 2023")
 
     # Filtrar os dados de acidentes para 2023
     df_2023 = df[df['ano'] == 2023]
 
-    # Merge com a base de população
-    df_merged = df_2023.merge(population_df, left_on='municipio', right_on='NOME DO MUNICÍPIO', how='left')
+    # Verificar se as colunas 'municipio' e 'NOME DO MUNICÍPIO' estão presentes
+    if 'municipio' not in df_2023.columns:
+        st.write("A coluna 'municipio' não está presente nos dados de acidentes.")
+        return
 
-    # Merge com a base de veículos
-    df_merged = df_merged.merge(vehicle_df, left_on='municipio', right_on='MUNICIPIO', how='left')
+    if population_df is not None:
+        if 'NOME DO MUNICÍPIO' not in population_df.columns:
+            st.write("A coluna 'NOME DO MUNICÍPIO' não está presente nos dados de população.")
+            return
+
+        # Merge com a base de população
+        df_merged = df_2023.merge(population_df, left_on='municipio', right_on='NOME DO MUNICÍPIO', how='left')
+        st.write("Merge with population data successful.")
+    else:
+        st.write("População data is not available.")
+        return
+
+    # Verificar se as colunas 'municipio' e 'MUNICIPIO' estão presentes
+    if vehicle_df is not None:
+        if 'MUNICIPIO' not in vehicle_df.columns:
+            st.write("A coluna 'MUNICIPIO' não está presente nos dados de veículos.")
+            return
+
+        # Merge com a base de veículos
+        df_merged = df_merged.merge(vehicle_df, left_on='municipio', right_on='MUNICIPIO', how='left')
+        st.write("Merge with vehicle data successful.")
+    else:
+        st.write("Vehicle data is not available.")
+        return
 
     # Gráfico de acidentes por quantidade de habitantes
-    df_merged['acidentes_por_habitante'] = df_merged['id'].count() / df_merged['POPULAÇÃO ESTIMADA']
+    df_merged['acidentes_por_habitante'] = df_merged.groupby('municipio')['id'].transform('count') / df_merged['POPULAÇÃO ESTIMADA']
     fig1 = px.scatter(df_merged, x='POPULAÇÃO ESTIMADA', y='acidentes_por_habitante',
                       title='Acidentes por Quantidade de Habitantes',
                       labels={'POPULAÇÃO ESTIMADA': 'População Estimada', 'acidentes_por_habitante': 'Acidentes por Habitante'})
@@ -204,7 +253,7 @@ def show_2023_analysis():
     # Gráfico de acidentes por tipo de veículo
     vehicle_types = ['AUTOMOVEL', 'CAMINHAO', 'MOTOCICLETA', 'ONIBUS', 'UTILITARIO']
     for vehicle_type in vehicle_types:
-        df_merged[f'acidentes_por_{vehicle_type.lower()}'] = df_merged['id'].count() / df_merged[vehicle_type]
+        df_merged[f'acidentes_por_{vehicle_type.lower()}'] = df_merged.groupby('municipio')['id'].transform('count') / df_merged[vehicle_type]
     
     fig2 = px.scatter_matrix(df_merged, dimensions=[f'acidentes_por_{vt.lower()}' for vt in vehicle_types],
                              title='Acidentes por Tipo de Veículo',
@@ -242,7 +291,6 @@ def show_2023_analysis():
                   labels={'uso_solo': 'Uso do Solo', 'counts': 'Número de Acidentes', 'tipo_pista': 'Tipo de Pista'})
     st.plotly_chart(fig6)
 
-
 # Página de Visão Geral
 if page == "Visão Geral":
     show_overview()
@@ -251,6 +299,6 @@ if page == "Visão Geral":
 elif page == "Filtros e Dados":
     show_filters_data()
 
-# Adicionar nova página ao menu lateral
-if page == "Análise 2023":
+# Página de Análise 2023
+elif page == "Análise 2023":
     show_2023_analysis()
