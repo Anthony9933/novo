@@ -35,26 +35,16 @@ def load_data(years):
         dfs.append(df)
     return pd.concat(dfs, ignore_index=True)
 
-# Carregar os dados de 2013 a 2023
+#carregando dados dos acidentes de 2013 a 2023
 years = list(range(2013, 2024))
 df = load_data(years)
 
-# Sidebar (Menu Lateral)
+#barra lateral
 st.sidebar.header("Configurações")
-page = st.sidebar.selectbox("Escolha a Página", ["Visão Geral", "Filtros e Dados"])
-
-# Seleção do ano e estado na barra lateral
-#ano_selecionado = st.sidebar.selectbox('Selecione o Ano', options=years, key='year_select')
-#estados = ["Todos"] + list(df['uf'].unique())
-#UF = st.sidebar.selectbox('Selecione o UF', options=estados, key='filters_data_uf')
-
-# Filtrar os dados pelo ano e estado selecionados
-#df_ano = df[df['ano'] == ano_selecionado]
-#if UF != "Todos":
-    #df_ano = df_ano[df_ano['uf'] == UF]
+page = st.sidebar.selectbox("Escolha a Página", ["Visão Geral", "Filtros e Dados", "Análise 2023"])
 
 def show_overview():
-    # Visão Geral do Projeto
+    # visão geral 
     st.header("Visão Geral do Projeto")
     st.write("Bem-vindo ao projeto de Visualização de dados da base de dados da PRF. Este projeto gira em torno da análise e apresentação "
              "de dados de acidentes, localização, motivos e categorias. O conjunto de dados contém várias colunas fornecendo insights "
@@ -67,8 +57,6 @@ def show_overview():
     
     st.markdown("- *Conjunto de Dados*: O conjunto de dados consiste em registros de acidentes, cada um contendo informações como data, "
                 "local, motivo, tipo e mais.")
-    st.markdown("- *Explicação das Colunas*: As colunas do conjunto de dados fornecem detalhes sobre os acidentes, locais, "
-                "motivos e resultados.")
     
     # Objetivo do Projeto
     st.header("Objetivo do Projeto")
@@ -181,6 +169,80 @@ def show_filters_data():
     fig6.update_geos(fitbounds="locations", visible=False)
     st.plotly_chart(fig6)
 
+
+# Funções para carregar as novas bases de dados
+@st.cache_data
+def load_population_data():
+    return pd.read_csv('cidades.csv', encoding='latin-1', delimiter=';')
+
+@st.cache_data
+def load_vehicle_data():
+    return pd.read_csv('frotas_munic_modelo_dezembro_2023.csv', encoding='latin-1', delimiter=';')
+
+population_df = load_population_data()
+vehicle_df = load_vehicle_data()
+
+def show_2023_analysis():
+    st.header("Análise de 2023")
+
+    # Filtrar os dados de acidentes para 2023
+    df_2023 = df[df['ano'] == 2023]
+
+    # Merge com a base de população
+    df_merged = df_2023.merge(population_df, left_on='municipio', right_on='NOME DO MUNICÍPIO', how='left')
+
+    # Merge com a base de veículos
+    df_merged = df_merged.merge(vehicle_df, left_on='municipio', right_on='MUNICIPIO', how='left')
+
+    # Gráfico de acidentes por quantidade de habitantes
+    df_merged['acidentes_por_habitante'] = df_merged['id'].count() / df_merged['POPULAÇÃO ESTIMADA']
+    fig1 = px.scatter(df_merged, x='POPULAÇÃO ESTIMADA', y='acidentes_por_habitante',
+                      title='Acidentes por Quantidade de Habitantes',
+                      labels={'POPULAÇÃO ESTIMADA': 'População Estimada', 'acidentes_por_habitante': 'Acidentes por Habitante'})
+    st.plotly_chart(fig1)
+
+    # Gráfico de acidentes por tipo de veículo
+    vehicle_types = ['AUTOMOVEL', 'CAMINHAO', 'MOTOCICLETA', 'ONIBUS', 'UTILITARIO']
+    for vehicle_type in vehicle_types:
+        df_merged[f'acidentes_por_{vehicle_type.lower()}'] = df_merged['id'].count() / df_merged[vehicle_type]
+    
+    fig2 = px.scatter_matrix(df_merged, dimensions=[f'acidentes_por_{vt.lower()}' for vt in vehicle_types],
+                             title='Acidentes por Tipo de Veículo',
+                             labels={f'acidentes_por_{vt.lower()}': f'Acidentes por {vt}' for vt in vehicle_types})
+    st.plotly_chart(fig2)
+
+    # Heatmap de distribuição de acidentes por dia da semana e hora
+    df_merged['hora'] = pd.to_datetime(df_merged['horario']).dt.hour
+    df_merged['dia_semana'] = pd.Categorical(df_merged['dia_semana'], 
+                                             categories=['segunda-feira', 'terça-feira', 'quarta-feira', 'quinta-feira', 'sexta-feira', 'sábado', 'domingo'], 
+                                             ordered=True)
+    heatmap_data = df_merged.groupby(['dia_semana', 'hora']).size().reset_index(name='Número de Acidentes')
+    heatmap_data = heatmap_data.pivot('dia_semana', 'hora', 'Número de Acidentes')
+    fig3 = px.imshow(heatmap_data, aspect='auto', title='Distribuição de Acidentes por Dia da Semana e Hora')
+    st.plotly_chart(fig3)
+
+    # Gráfico de barras empilhadas por tipo de acidente e classificação
+    accident_types = df_merged.groupby(['tipo_acidente', 'classificacao_acidente']).size().reset_index(name='counts')
+    fig4 = px.bar(accident_types, x='tipo_acidente', y='counts', color='classificacao_acidente',
+                  title='Distribuição de Acidentes por Tipo e Classificação',
+                  labels={'tipo_acidente': 'Tipo de Acidente', 'counts': 'Número de Acidentes', 'classificacao_acidente': 'Classificação'})
+    st.plotly_chart(fig4)
+
+    # Gráfico de barras empilhadas por condição meteorológica e tipo de acidente
+    weather_conditions = df_merged.groupby(['condicao_metereologica', 'tipo_acidente']).size().reset_index(name='counts')
+    fig5 = px.bar(weather_conditions, x='condicao_metereologica', y='counts', color='tipo_acidente',
+                  title='Distribuição de Acidentes por Condição Meteorológica e Tipo de Acidente',
+                  labels={'condicao_metereologica': 'Condição Meteorológica', 'counts': 'Número de Acidentes', 'tipo_acidente': 'Tipo de Acidente'})
+    st.plotly_chart(fig5)
+
+    # Gráfico de barras empilhadas por uso do solo e tipo de pista
+    road_conditions = df_merged.groupby(['uso_solo', 'tipo_pista']).size().reset_index(name='counts')
+    fig6 = px.bar(road_conditions, x='uso_solo', y='counts', color='tipo_pista',
+                  title='Distribuição de Acidentes por Uso do Solo e Tipo de Pista',
+                  labels={'uso_solo': 'Uso do Solo', 'counts': 'Número de Acidentes', 'tipo_pista': 'Tipo de Pista'})
+    st.plotly_chart(fig6)
+
+
 # Página de Visão Geral
 if page == "Visão Geral":
     show_overview()
@@ -188,3 +250,7 @@ if page == "Visão Geral":
 # Página de Filtros e Dados
 elif page == "Filtros e Dados":
     show_filters_data()
+
+# Adicionar nova página ao menu lateral
+if page == "Análise 2023":
+    show_2023_analysis()
