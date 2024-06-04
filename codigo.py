@@ -205,6 +205,37 @@ else:
 # Adicionar a nova página ao menu lateral e a lógica para mostrar a análise de 2023
 def show_2023_analysis():
     st.header("Análise de 2023")
+    # Funções para carregar as novas bases de dados
+@st.cache_data
+def load_population_data():
+    try:
+        population_data = pd.read_csv('cidades.csv', encoding='latin-1')
+        return population_data
+    except Exception as e:
+        return None
+
+@st.cache_data
+def load_vehicle_data():
+    try:
+        vehicle_data = pd.read_csv('frota_munic_modelo_dezembro_2023.csv', encoding='latin-1')
+        return vehicle_data
+    except Exception as e:
+        return None
+
+# Carregar os dados adicionais
+population_df = load_population_data()
+vehicle_df = load_vehicle_data()
+
+# Verificar se os dados foram carregados corretamente
+if population_df is not None:
+    st.write("Population DataFrame:", population_df.head())
+else:
+    st.write("Failed to load population data.")
+
+if vehicle_df is not None:
+    st.write("Vehicle DataFrame:", vehicle_df.head())
+else:
+    st.write("Failed to load vehicle data.")
 
     # Filtrar os dados de acidentes para 2023
     df_2023 = df[df['ano'] == 2023]
