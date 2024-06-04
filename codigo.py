@@ -2,6 +2,12 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 
+st.set_page_config(
+    page_title="Visualização de Dados da PRF",
+    page_icon="🚓",  # Você pode usar um emoji ou um link para uma imagem
+    layout="wide"
+)
+
 # IDs dos arquivos no Google Drive
 file_ids = {
     2013: "1tmO9ObhSVL-T-1SYfwmVWUy1ty7eSvfC",
