@@ -49,7 +49,7 @@ df_automoveis = pd.read_csv("frota_munic_modelo_dezembro_2023.csv", delimiter=";
 
 # Barra lateral
 st.sidebar.header("Configurações")
-page = st.sidebar.selectbox("Escolha a Página", ["Visão Geral", "Filtros e Dados", "Comparação"])
+page = st.sidebar.selectbox("Escolha a Página", ["Visão Geral", "Filtros e Dados"])
 
 def show_overview():
     # Visão geral 
